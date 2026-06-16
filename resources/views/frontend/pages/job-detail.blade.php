@@ -112,7 +112,16 @@
     <div class="apply-box">
       <h3>✨ تقدّم الآن</h3>
       <p>وظيفة remote — دفع {{ trim($job->currency, '$') ?: 'USD' }}</p>
-      <button class="btn-apply" type="button" onclick="applyToJob({{ $job->id }})">تقدم الآن</button>
+      @auth
+        @if($hasApplied)
+          <button class="btn-apply btn-apply--done" type="button" disabled id="job-apply-btn">{{ $applicationStatusLabel }}</button>
+          <p class="apply-box-note">تم إرسال طلبك لهذه الوظيفة</p>
+        @else
+          <button class="btn-apply" type="button" id="job-apply-btn" onclick="applyToJob({{ $job->id }})">تقدم الآن</button>
+        @endif
+      @else
+        <a class="btn-apply" href="{{ route('login', ['redirect' => url()->current()]) }}">سجّل الدخول للتقديم</a>
+      @endauth
     </div>
     <div class="sidebar-card">
       <h3>📊 معلومات الوظيفة</h3>
@@ -139,4 +148,10 @@
     </div>
   </aside>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+  window.JOB_APPLY_URL = @json(route('jobs.apply', $job));
+</script>
 @endsection

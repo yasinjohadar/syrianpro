@@ -81,6 +81,15 @@
                             </a>
                         </li>
 
+                        <li class="slide {{ request()->routeIs('admin.job-applications.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.job-applications.index') }}" class="side-menu__item {{ request()->routeIs('admin.job-applications.*') ? 'active' : '' }}">
+                                <span class="side-menu__icon side-menu__icon--boxed side-menu__icon--consultation">
+                                    <i class="ri-file-list-3-line"></i>
+                                </span>
+                                <span class="side-menu__label">طلبات التوظيف</span>
+                            </a>
+                        </li>
+
                         <li class="slide {{ request()->routeIs('admin.talents.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.talents.index') }}" class="side-menu__item {{ request()->routeIs('admin.talents.*') ? 'active' : '' }}">
                                 <span class="side-menu__icon side-menu__icon--boxed side-menu__icon--roles">

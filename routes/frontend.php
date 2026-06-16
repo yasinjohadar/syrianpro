@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Frontend\CompanyController;
+use App\Http\Controllers\Frontend\DashboardSeekerController;
+use App\Http\Controllers\Frontend\JobApplicationController;
 use App\Http\Controllers\Frontend\JobController;
 use App\Http\Controllers\Frontend\TalentController;
 use App\Http\Controllers\NewsletterController;
@@ -82,6 +84,11 @@ Route::post('/consultation', [ConsultationController::class, 'store'])->name('co
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
 
+Route::middleware(['auth', 'check.user.active'])->group(function () {
+    Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
+    Route::get('/dashboard/seeker', [DashboardSeekerController::class, 'index'])->name('dashboard.seeker');
+});
+
 Route::get('/talents', [TalentController::class, 'index'])->name('talents.index');
 Route::get('/talents/{talent}', [TalentController::class, 'show'])->name('talents.show');
 
@@ -91,5 +98,4 @@ Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('co
 Route::get('/post-job', fn () => view('frontend.pages.post-job', ['activePage' => 'post-job']))->name('post-job');
 Route::get('/edit-profile', fn () => view('frontend.pages.edit-profile', ['activePage' => 'edit-profile']))->name('edit-profile');
 
-Route::get('/dashboard/seeker', fn () => view('frontend.pages.dashboard-seeker', ['activePage' => 'dashboard-seeker']))->name('dashboard.seeker');
 Route::get('/dashboard/company', fn () => view('frontend.pages.dashboard-company', ['activePage' => 'dashboard-company']))->name('dashboard.company');

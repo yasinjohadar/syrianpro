@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @php
         $fa = asset('frontend/assets');
     @endphp
@@ -41,9 +42,7 @@
         };
         window.FRONTEND_AUTH = {
             loggedIn: @json(auth()->check()),
-            dashboardUrl: @json(auth()->check()
-                ? (auth()->user()->hasRole('admin') ? route('admin.dashboard') : route('dashboard.seeker'))
-                : null),
+            dashboardUrl: @json(auth()->check() ? route('admin.dashboard') : null),
         };
     </script>
     <script src="{{ $fa }}/js/app.js"></script>

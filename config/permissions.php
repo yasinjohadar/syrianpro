@@ -50,6 +50,10 @@ return [
                 'job-edit' => 'تعديل وظيفة',
                 'job-delete' => 'حذف وظيفة',
                 'job-toggle' => 'تفعيل/تعطيل وظيفة',
+                'job-application-list' => 'عرض طلبات التوظيف',
+                'job-application-show' => 'عرض تفاصيل طلب توظيف',
+                'job-application-update' => 'تحديث حالة طلب توظيف',
+                'job-application-delete' => 'حذف طلب توظيف',
             ],
         ],
         'talents' => [

@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\WhatsAppWebController;
 use App\Http\Controllers\Admin\WhatsAppWebSettingsController;
 use App\Http\Controllers\Admin\WhatsAppWebhookController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\TalentController;
 use App\Http\Controllers\Admin\TechSpecialtyController;
@@ -64,6 +65,12 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
         ->parameters(['jobs' => 'job']);
     Route::post('jobs/{job}/toggle-active', [JobController::class, 'toggleActive'])
         ->name('jobs.toggle-active');
+
+    // طلبات التوظيف
+    Route::get('job-applications', [JobApplicationController::class, 'index'])->name('job-applications.index');
+    Route::get('job-applications/{jobApplication}', [JobApplicationController::class, 'show'])->name('job-applications.show');
+    Route::patch('job-applications/{jobApplication}/status', [JobApplicationController::class, 'updateStatus'])->name('job-applications.update-status');
+    Route::delete('job-applications/{jobApplication}', [JobApplicationController::class, 'destroy'])->name('job-applications.destroy');
 
     // المواهب
     Route::resource('talents', TalentController::class);

@@ -37,9 +37,20 @@ class JobController extends Controller
     {
         abort_unless($job->is_active, 404);
 
+        $application = null;
+        if (auth()->check()) {
+            $application = \App\Models\JobApplication::query()
+                ->where('user_id', auth()->id())
+                ->where('job_listing_id', $job->id)
+                ->first();
+        }
+
         return view('frontend.pages.job-detail', [
             'activePage' => 'jobs',
             'job' => $job,
+            'hasApplied' => $application !== null,
+            'applicationStatus' => $application?->status,
+            'applicationStatusLabel' => $application?->statusLabel(),
         ]);
     }
 }

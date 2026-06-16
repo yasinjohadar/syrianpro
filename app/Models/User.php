@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Session::class, 'user_id');
     }
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
 }

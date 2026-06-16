@@ -9,6 +9,7 @@
                     <th style="min-width: 120px;">الراتب</th>
                     <th style="min-width: 100px;">Remote</th>
                     <th style="min-width: 80px;">مميزة</th>
+                    <th style="min-width: 90px;">المتقدمون</th>
                     <th style="min-width: 100px;">الحالة</th>
                     <th style="min-width: 150px;">إجراءات</th>
                 </tr>
@@ -43,6 +44,16 @@
                                 <span class="badge-soft badge-soft-warning">نعم</span>
                             @else
                                 <span class="badge-soft badge-soft-secondary">لا</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($job->applications_count > 0)
+                                <a href="{{ route('admin.job-applications.index', ['job_id' => $job->id]) }}"
+                                   class="badge-soft badge-soft-info text-decoration-none">
+                                    {{ $job->applications_count }}
+                                </a>
+                            @else
+                                <span class="text-muted">0</span>
                             @endif
                         </td>
                         <td>
@@ -85,7 +96,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div class="empty-state">
                                 <div class="empty-state-icon"><i class="ri-briefcase-line"></i></div>
                                 <h5 class="fw-bold mb-2">لا توجد وظائف</h5>

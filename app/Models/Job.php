@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -91,6 +92,16 @@ class Job extends Model
     public function techSpecialty(): BelongsTo
     {
         return $this->belongsTo(TechSpecialty::class);
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class, 'job_listing_id');
+    }
+
+    public function applicationsCount(): int
+    {
+        return $this->applications()->count();
     }
 
     public function logoUrl(): ?string

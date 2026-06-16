@@ -1383,16 +1383,77 @@ function getApplications() {
 }
 
 function applyToJob(jobId) {
-  const apps = getApplications();
-  const numId = Number(jobId);
-  if (apps.some(a => a.jobId === numId)) {
-    showToast('لقد تقدمت لهذه الوظيفة مسبقاً', 'error');
+  const auth = window.FRONTEND_AUTH || {};
+  const routes = window.FRONTEND_ROUTES || {};
+
+  if (!auth.loggedIn) {
+    const loginUrl = routes.login || '/login';
+    const returnUrl = window.location.href;
+    window.location.href = `${loginUrl}?redirect=${encodeURIComponent(returnUrl)}`;
     return;
   }
-  const job = getJobById(numId);
-  apps.push({ jobId: numId, title: job?.title, company: job?.company, date: 'اليوم', status: 'قيد المراجعة' });
-  localStorage.setItem(LS_APPLICATIONS, JSON.stringify(apps));
-  showToast('✅ تم إرسال طلبك بنجاح!', 'success');
+
+  const applyUrl = window.JOB_APPLY_URL || (routes.jobs ? `${routes.jobs}/${jobId}/apply` : null);
+  if (!applyUrl) {
+    showToast('تعذر إرسال الطلب', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('job-apply-btn');
+  if (btn?.disabled) return;
+
+  const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'جاري الإرسال...';
+  }
+
+  fetch(applyUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': csrf,
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    credentials: 'same-origin',
+  })
+    .then(async (res) => {
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        showToast('✅ ' + (data.message || 'تم إرسال طلبك بنجاح!'), 'success');
+        if (btn) {
+          btn.classList.add('btn-apply--done');
+          btn.textContent = data.status_label || 'قيد المراجعة';
+          btn.disabled = true;
+        }
+        const note = document.querySelector('.apply-box-note');
+        if (!note && btn?.parentElement) {
+          const p = document.createElement('p');
+          p.className = 'apply-box-note';
+          p.textContent = 'تم إرسال طلبك لهذه الوظيفة';
+          btn.parentElement.appendChild(p);
+        }
+        return;
+      }
+      if (res.status === 409) {
+        showToast(data.message || 'لقد تقدمت لهذه الوظيفة مسبقاً', 'error');
+        if (btn) {
+          btn.classList.add('btn-apply--done');
+          btn.textContent = data.status_label || 'قيد المراجعة';
+          btn.disabled = true;
+        }
+        return;
+      }
+      throw new Error(data.message || 'فشل إرسال الطلب');
+    })
+    .catch((err) => {
+      showToast(err.message || 'حدث خطأ، حاول مجدداً', 'error');
+      if (btn && !btn.classList.contains('btn-apply--done')) {
+        btn.disabled = false;
+        btn.textContent = 'تقدم الآن';
+      }
+    });
 }
 
 function loadEditProfileForm() {
@@ -1480,7 +1541,7 @@ function renderSeekerDashboard() {
   setText('#sd-completion-text', `اكتمال الملف: ${completion}%`);
 
   const appsEl = document.getElementById('sd-applications');
-  if (appsEl) {
+  if (appsEl && !appsEl.dataset.serverRendered) {
     appsEl.innerHTML = apps.length ? apps.map(a => `
       <div class="app-item">
         <div><strong>${a.title}</strong> — ${a.company}</div>

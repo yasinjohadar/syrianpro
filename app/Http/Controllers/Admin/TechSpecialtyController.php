@@ -126,7 +126,8 @@ class TechSpecialtyController extends Controller
 
     private function buildIndexData(Request $request): array
     {
-        $query = TechSpecialty::query();
+        $query = TechSpecialty::query()
+            ->withCount(['jobs as active_jobs_count' => fn ($q) => $q->active()]);
 
         if ($request->filled('query')) {
             $search = $request->input('query');

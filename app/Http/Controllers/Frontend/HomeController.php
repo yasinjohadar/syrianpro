@@ -12,7 +12,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $specialties = TechSpecialty::query()->forHome()->get();
+        $specialties = TechSpecialty::query()
+            ->forHome()
+            ->withCount(['jobs as active_jobs_count' => fn ($q) => $q->active()])
+            ->get();
         $featuredJobs = Job::query()->forHome()->limit(6)->get();
         $featuredTalents = Talent::query()->forHome()->limit(4)->get();
         $featuredCompanies = Company::query()->forHome()->limit(8)->get();

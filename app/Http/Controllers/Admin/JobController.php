@@ -139,7 +139,7 @@ class JobController extends Controller
 
     private function buildIndexData(Request $request): array
     {
-        $query = Job::query()->with('techSpecialty');
+        $query = Job::query()->with('techSpecialty')->withCount('applications');
 
         if ($request->filled('query')) {
             $search = $request->input('query');

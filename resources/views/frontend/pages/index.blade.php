@@ -8,53 +8,80 @@
 @section('content')
 <!-- Hero -->
 <section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-grid"></div>
+  </div>
   <div class="hero-inner">
-    <div class="hero-badge">🌐 المواهب التقنية السورية — Remote-first</div>
-    <h1>اعمل عن بُعد<br><span class="highlight">مع العالم</span></h1>
-    <p>منصة متكاملة للمبرمجين والتقنيين السوريين — اعرض أعمالك، اكتشف وظائف عن بُعد، وتواصل مع الشركات.</p>
-    <div class="hero-search">
-      <div class="ac-wrap">
-        <div class="search-field">
-          <span class="icon">🔍</span>
-          <input type="text" placeholder="التخصص: React، DevOps، UI/UX..." id="hero-search-q" data-ac="specialty" autocomplete="off">
-          <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
-        </div>
-        <div class="ac-menu" dir="rtl"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>المواهب التقنية السورية — Remote-first</span>
       </div>
-      <div class="ac-wrap">
-        <div class="search-field">
-          <span class="icon">📍</span>
-          <input type="text" placeholder="المدينة: دمشق، حلب، عن بُعد..." id="hero-search-city" data-ac="city" autocomplete="off">
-          <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
-        </div>
-        <div class="ac-menu" dir="rtl"></div>
-      </div>
-      <button class="btn btn-primary" type="button" onclick="heroSearch()">ابحث الآن</button>
+      <h1 class="hero-title">اعمل عن بُعد<br><span class="highlight">مع العالم</span></h1>
+      <p class="hero-lead">منصة متكاملة للمبرمجين والتقنيين السوريين — اعرض أعمالك، اكتشف وظائف عن بُعد، وتواصل مع الشركات.</p>
     </div>
+
+    <div class="hero-search-card">
+      <div class="hero-search">
+        <div class="ac-wrap hero-search-field">
+          <div class="search-field">
+            <span class="icon">🔍</span>
+            <input type="text" placeholder="التخصص: React، DevOps، UI/UX..." id="hero-search-q" data-ac="specialty" autocomplete="off">
+            <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
+          </div>
+          <div class="ac-menu" dir="rtl"></div>
+        </div>
+        <div class="ac-wrap hero-search-field">
+          <div class="search-field">
+            <span class="icon">📍</span>
+            <input type="text" placeholder="المدينة: دمشق، حلب، عن بُعد..." id="hero-search-city" data-ac="city" autocomplete="off">
+            <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
+          </div>
+          <div class="ac-menu" dir="rtl"></div>
+        </div>
+        <button class="btn btn-primary hero-search-btn" type="button" onclick="heroSearch()">
+          <span>ابحث الآن</span>
+          <span class="hero-search-btn-icon" aria-hidden="true">←</span>
+        </button>
+      </div>
+    </div>
+
     <div class="hero-paths">
-      <button class="hero-path-btn primary" type="button" onclick="goTo('edit-profile.html')">👤 أنا تقني — أنشئ ملفي</button>
-      <button class="hero-path-btn secondary" type="button" onclick="goTo('post-job.html')">🏢 أنا شركة — انشر وظيفة</button>
-      <button class="hero-path-btn secondary" type="button" onclick="goTo('jobs.html')">💼 تصفح الوظائف</button>
+      <button class="hero-path-btn primary" type="button" onclick="goTo('{{ route('edit-profile') }}')">
+        <span class="hero-path-icon">👤</span>
+        <span class="hero-path-text"><strong>أنا تقني</strong><small>أنشئ ملفي</small></span>
+      </button>
+      <button class="hero-path-btn secondary" type="button" onclick="goTo('{{ route('post-job') }}')">
+        <span class="hero-path-icon">🏢</span>
+        <span class="hero-path-text"><strong>أنا شركة</strong><small>انشر وظيفة</small></span>
+      </button>
+      <button class="hero-path-btn secondary" type="button" onclick="goTo('{{ route('jobs.index') }}')">
+        <span class="hero-path-icon">💼</span>
+        <span class="hero-path-text"><strong>تصفح الوظائف</strong><small>فرص remote</small></span>
+      </button>
     </div>
+
     <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-num">500<span>+</span></span>
-        <span class="stat-label">تقني سوري</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-num">120<span>+</span></span>
-        <span class="stat-label">وظيفة remote</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-num">80<span>+</span></span>
-        <span class="stat-label">شركة remote-friendly</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-num">95<span>%</span></span>
-        <span class="stat-label">دفع بالدولار</span>
+      <div class="hero-stats-track">
+        <div class="stat-item">
+          <span class="stat-num">500<span>+</span></span>
+          <span class="stat-label">تقني سوري</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">120<span>+</span></span>
+          <span class="stat-label">وظيفة remote</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">80<span>+</span></span>
+          <span class="stat-label">شركة remote-friendly</span>
+        </div>
+        <div class="stat-item stat-item--accent">
+          <span class="stat-num">95<span>%</span></span>
+          <span class="stat-label">دفع بالدولار</span>
+        </div>
       </div>
     </div>
   </div>

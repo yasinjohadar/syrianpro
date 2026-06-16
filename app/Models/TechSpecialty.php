@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -55,9 +56,27 @@ class TechSpecialty extends Model
         return $slug ?: Str::random(8);
     }
 
+    public function jobs(): HasMany
+    {
+        return $this->hasMany(Job::class, 'tech_specialty_id');
+    }
+
+    public function activeJobsCount(): int
+    {
+        if (array_key_exists('active_jobs_count', $this->attributes)) {
+            return (int) $this->attributes['active_jobs_count'];
+        }
+
+        return $this->jobs()->active()->count();
+    }
+
     public function getJobsCountLabelAttribute(): string
     {
-        $count = $this->jobs_count;
+        $count = $this->activeJobsCount();
+
+        if ($count === 0) {
+            return 'لا وظائف حالياً';
+        }
 
         if ($count === 1) {
             return '1 وظيفة';
@@ -67,7 +86,11 @@ class TechSpecialty extends Model
             return '2 وظيفتان';
         }
 
-        return $count.'+ وظيفة';
+        if ($count <= 10) {
+            return $count.' وظائف';
+        }
+
+        return $count.' وظيفة';
     }
 
     public function iconUrl(): ?string

@@ -19,12 +19,7 @@
         <div class="nav-actions">
             <button class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع" type="button">🌙</button>
             @auth
-                @php
-                    $dashboardUrl = auth()->user()->hasRole('admin')
-                        ? route('admin.dashboard')
-                        : route('dashboard.seeker');
-                @endphp
-                <a class="btn btn-outline btn-sm" href="{{ $dashboardUrl }}">لوحتي</a>
+                <a class="btn btn-outline btn-sm" href="{{ route('admin.dashboard') }}">لوحتي</a>
             @else
                 <a class="btn btn-outline btn-sm" href="{{ route('login') }}">تسجيل الدخول</a>
                 <button class="btn btn-primary btn-sm" type="button" onclick="openModal('register')">ابدأ مجاناً ✨</button>

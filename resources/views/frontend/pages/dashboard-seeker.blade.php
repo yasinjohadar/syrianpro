@@ -11,40 +11,50 @@
     <div class="dash-nav-section">
       <div class="dash-nav-label">حسابي</div>
       <div class="dash-nav-item active"><span class="dash-icon">📊</span> لوحة التحكم</div>
-      <div class="dash-nav-item" onclick="goTo('edit-profile.html')"><span class="dash-icon">✏️</span> تعديل الملف</div>
-      <div class="dash-nav-item" onclick="goTo('talent-profile.html?id=99')"><span class="dash-icon">👁️</span> الملف العام</div>
+      <div class="dash-nav-item" onclick="goTo('{{ route('edit-profile') }}')"><span class="dash-icon">✏️</span> تعديل الملف</div>
     </div>
     <div class="dash-nav-section">
       <div class="dash-nav-label">الوظائف</div>
-      <div class="dash-nav-item" onclick="goTo('jobs.html')"><span class="dash-icon">🔍</span> تصفح الوظائف</div>
-      <div class="dash-nav-item"><span class="dash-icon">📤</span> طلباتي</div>
-      <div class="dash-nav-item"><span class="dash-icon">🔖</span> محفوظاتي</div>
+      <div class="dash-nav-item" onclick="goTo('{{ route('jobs.index') }}')"><span class="dash-icon">🔍</span> تصفح الوظائف</div>
+      <div class="dash-nav-item active"><span class="dash-icon">📤</span> طلباتي</div>
     </div>
   </div>
   <div class="dashboard-main">
     <div class="dash-header">
-      <h1>مرحباً، <span id="sd-name">تقني</span> 👋</h1>
-      <p id="sd-title">—</p>
-    </div>
-
-    <div class="profile-card" style="position:static; margin-bottom:24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-      <div class="profile-avatar" id="sd-avatar" style="margin:0;">أ</div>
-      <div style="flex:1; min-width:200px;">
-        <div class="profile-complete" style="margin-bottom:8px;">
-          <div class="profile-complete-fill" id="sd-completion-fill" style="width:60%"></div>
-        </div>
-        <div class="profile-complete-text" id="sd-completion-text">اكتمال الملف: 60%</div>
-      </div>
-      <button class="btn btn-primary" type="button" onclick="goTo('edit-profile.html')">أكمل ملفك</button>
+      <h1>مرحباً، <span>{{ $user->name }}</span> 👋</h1>
+      <p>{{ $user->email }}</p>
     </div>
 
     <div class="dash-grid">
       <div class="dash-card">
         <div class="dash-card-header">
           <div class="dash-card-title">📤 طلباتي</div>
-          <div class="dash-card-action" onclick="goTo('jobs.html')">تصفح وظائف</div>
+          <a class="dash-card-action" href="{{ route('jobs.index') }}">تصفح وظائف</a>
         </div>
-        <div id="sd-applications"></div>
+        <div id="sd-applications" data-server-rendered="1">
+          @forelse($applications as $application)
+            <div class="app-item">
+              <div>
+                <strong>
+                  @if($application->job)
+                    <a href="{{ route('jobs.show', $application->job) }}" style="color:inherit; text-decoration:none;">
+                      {{ $application->job->title }}
+                    </a>
+                  @else
+                    وظيفة محذوفة
+                  @endif
+                </strong>
+                @if($application->job)
+                  — {{ $application->job->company_name }}
+                @endif
+              </div>
+              <span class="tag tag-teal">{{ $application->statusLabel() }}</span>
+              <span style="font-size:0.82rem;color:var(--text3)">{{ $application->created_at->diffForHumans() }}</span>
+            </div>
+          @empty
+            <p style="color:var(--text3)">لم تتقدم لأي وظيفة بعد — <a href="{{ route('jobs.index') }}" style="color:var(--accent)">تصفح الوظائف</a></p>
+          @endforelse
+        </div>
       </div>
       <div class="dash-card">
         <div class="dash-card-header">
