@@ -47,7 +47,7 @@ class JobController extends Controller
 
         return view('frontend.pages.job-detail', [
             'activePage' => 'jobs',
-            'job' => $job,
+            'job' => $job->load(['techSpecialty', 'company']),
             'hasApplied' => $application !== null,
             'applicationStatus' => $application?->status,
             'applicationStatusLabel' => $application?->statusLabel(),
