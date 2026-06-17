@@ -864,9 +864,65 @@ function injectLayout(activePage) {
 }
 
 // ========================
-// NAVBAR SCROLL
+// NAVBAR SCROLL & MOBILE
 // ========================
 let navbarScrollBound = false;
+let navbarMobileBound = false;
+
+function openNavDrawer() {
+  const navbar = document.querySelector('.navbar');
+  if (!navbar) return;
+  navbar.classList.add('nav-open');
+  document.body.classList.add('nav-open');
+  const burger = navbar.querySelector('.nav-burger');
+  const drawer = navbar.querySelector('.nav-drawer');
+  burger?.setAttribute('aria-expanded', 'true');
+  drawer?.setAttribute('aria-hidden', 'false');
+}
+
+function closeNavDrawer() {
+  const navbar = document.querySelector('.navbar');
+  if (!navbar) return;
+  navbar.classList.remove('nav-open');
+  document.body.classList.remove('nav-open');
+  const burger = navbar.querySelector('.nav-burger');
+  const drawer = navbar.querySelector('.nav-drawer');
+  burger?.setAttribute('aria-expanded', 'false');
+  drawer?.setAttribute('aria-hidden', 'true');
+}
+
+function toggleNavDrawer() {
+  const navbar = document.querySelector('.navbar');
+  if (!navbar) return;
+  if (navbar.classList.contains('nav-open')) closeNavDrawer();
+  else openNavDrawer();
+}
+
+function initNavbarMobile() {
+  const navbar = document.querySelector('.navbar');
+  if (!navbar || navbarMobileBound) return;
+  navbarMobileBound = true;
+
+  const burger = navbar.querySelector('.nav-burger');
+  const overlay = navbar.querySelector('.nav-overlay');
+  const closeBtn = navbar.querySelector('.nav-drawer-close');
+
+  burger?.addEventListener('click', toggleNavDrawer);
+  overlay?.addEventListener('click', closeNavDrawer);
+  closeBtn?.addEventListener('click', closeNavDrawer);
+
+  navbar.querySelectorAll('.nav-drawer-link, .nav-brand--drawer').forEach(link => {
+    link.addEventListener('click', closeNavDrawer);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeNavDrawer();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 992) closeNavDrawer();
+  });
+}
 
 function initNavbarScroll() {
   const navbar = document.querySelector('.navbar');
@@ -887,6 +943,7 @@ function initNavbarScroll() {
     navbarScrollBound = true;
   }
   updateNavbar();
+  initNavbarMobile();
 }
 
 // Legacy navigate — redirect to pages
