@@ -5,7 +5,6 @@
         ['id' => 'jobs', 'label' => 'الوظائف', 'icon' => '💼', 'href' => route('jobs.index')],
         ['id' => 'talents', 'label' => 'المواهب', 'icon' => '⭐', 'href' => route('talents.index')],
         ['id' => 'companies', 'label' => 'الشركات', 'icon' => '🏢', 'href' => route('companies.index')],
-        ['id' => 'post-job', 'label' => 'أضف وظيفة', 'icon' => '➕', 'href' => route('post-job')],
     ];
 @endphp
 <nav class="navbar" id="site-navbar" aria-label="التنقل الرئيسي">

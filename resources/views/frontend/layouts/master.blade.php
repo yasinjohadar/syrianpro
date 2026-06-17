@@ -39,7 +39,7 @@
             jobs: @json(route('jobs.index')),
             talents: @json(route('talents.index')),
             companies: @json(route('companies.index')),
-            postJob: @json(route('post-job')),
+            contact: @json(route('contact')),
             editProfile: @json(route('edit-profile')),
             dashboardSeeker: @json(route('talent.dashboard')),
             dashboardCompany: @json(route('company.dashboard')),

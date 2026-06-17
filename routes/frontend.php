@@ -96,11 +96,5 @@ Route::get('/talents/{talent}', [TalentController::class, 'show'])->name('talent
 Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
 Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
 
-Route::get('/post-job', function () {
-    if (auth()->check() && auth()->user()->hasRole('company')) {
-        return redirect()->route('company.jobs.create');
-    }
-
-    return view('frontend.pages.post-job', ['activePage' => 'post-job']);
-})->name('post-job');
+Route::redirect('/post-job', '/jobs', 301);
 Route::get('/edit-profile', fn () => view('frontend.pages.edit-profile', ['activePage' => 'edit-profile']))->name('edit-profile');

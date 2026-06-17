@@ -382,7 +382,8 @@ function resolveUrl(url) {
     'talent-profile.html': id && routes.talents ? `${routes.talents}/${id}` : routes.talents,
     'companies.html': routes.companies,
     'company-profile.html': id && routes.companies ? `${routes.companies}/${id}` : routes.companies,
-    'post-job.html': routes.postJob,
+    'post-job.html': routes.jobs,
+    'contact.html': routes.contact,
     'edit-profile.html': routes.editProfile,
     'dashboard-seeker.html': routes.dashboardSeeker,
     'dashboard-company.html': routes.dashboardCompany,
@@ -660,7 +661,6 @@ const NAV_ITEMS = [
   { id: 'jobs', label: 'الوظائف', href: 'jobs.html' },
   { id: 'talents', label: 'المواهب', href: 'talents.html' },
   { id: 'companies', label: 'الشركات', href: 'companies.html' },
-  { id: 'post-job', label: 'أضف وظيفة', href: 'post-job.html' },
 ];
 
 function getNavbarAuthActionsHTML() {
@@ -710,7 +710,7 @@ function getFooterHTML() {
       </div>
       <div class="footer-cta-actions">
         <button class="btn btn-primary" onclick="goTo('edit-profile.html')">👤 أنشئ ملفك</button>
-        <button class="btn footer-cta-outline" onclick="goTo('post-job.html')">🏢 انشر وظيفة</button>
+        <button class="btn footer-cta-outline" onclick="goTo('contact.html')">🏢 تواصل معنا</button>
       </div>
     </div>
 
@@ -744,7 +744,7 @@ function getFooterHTML() {
       <div class="footer-col">
         <h4><span class="footer-col-dot"></span> للشركات</h4>
         <ul>
-          <li onclick="goTo('post-job.html')"><span>أضف وظيفة</span><span class="footer-link-arrow">←</span></li>
+          <li onclick="goTo('contact.html')"><span>تواصل معنا</span><span class="footer-link-arrow">←</span></li>
           <li onclick="goTo('dashboard-company.html')"><span>لوحة الشركة</span><span class="footer-link-arrow">←</span></li>
           <li onclick="goTo('talents.html')"><span>قاعدة المواهب</span><span class="footer-link-arrow">←</span></li>
           <li onclick="goTo('companies.html')"><span>الشركات</span><span class="footer-link-arrow">←</span></li>
@@ -950,7 +950,7 @@ function initNavbarScroll() {
 function navigate(pageId) {
   const map = {
     home: 'index.html', jobs: 'jobs.html', companies: 'companies.html',
-    talents: 'talents.html', 'post-job': 'post-job.html',
+    talents: 'talents.html', contact: 'contact.html',
     'dashboard-company': 'dashboard-company.html', profile: 'profile.html',
     'job-detail': 'job-detail.html', 'company-profile': 'company-profile.html',
     'talent-profile': 'talent-profile.html', 'edit-profile': 'edit-profile.html',

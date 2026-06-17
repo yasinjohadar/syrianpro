@@ -13,7 +13,7 @@
             </div>
             <div class="footer-cta-actions">
                 <a class="btn btn-primary" href="{{ route('edit-profile') }}">👤 أنشئ ملفك</a>
-                <a class="btn footer-cta-outline" href="{{ route('post-job') }}">🏢 انشر وظيفة</a>
+                <a class="btn footer-cta-outline" href="{{ route('contact') }}">🏢 تواصل معنا</a>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
             <div class="footer-col">
                 <h4><span class="footer-col-dot"></span> للشركات</h4>
                 <ul>
-                    <li><a href="{{ route('post-job') }}"><span>أضف وظيفة</span><span class="footer-link-arrow">←</span></a></li>
+                    <li><a href="{{ route('contact') }}"><span>تواصل معنا</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('company.dashboard') }}"><span>لوحة الشركة</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('talents.index') }}"><span>قاعدة المواهب</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('companies.index') }}"><span>الشركات</span><span class="footer-link-arrow">←</span></a></li>

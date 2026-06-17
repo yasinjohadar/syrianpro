@@ -54,9 +54,9 @@
         <span class="hero-path-icon">👤</span>
         <span class="hero-path-text"><strong>أنا تقني</strong><small>أنشئ ملفي</small></span>
       </button>
-      <button class="hero-path-btn secondary" type="button" onclick="goTo('{{ route('post-job') }}')">
+      <button class="hero-path-btn secondary" type="button" onclick="goTo('{{ route('companies.index') }}')">
         <span class="hero-path-icon">🏢</span>
-        <span class="hero-path-text"><strong>أنا شركة</strong><small>انشر وظيفة</small></span>
+        <span class="hero-path-text"><strong>أنا شركة</strong><small>تصفح الشركات</small></span>
       </button>
       <button class="hero-path-btn secondary" type="button" onclick="goTo('{{ route('jobs.index') }}')">
         <span class="hero-path-icon">💼</span>
@@ -274,10 +274,10 @@
             للشركات والتوظيف عن بُعد
           </span>
           <h2 class="home-cta-title">شركة تبحث عن<br><span>مواهب سورية؟</span></h2>
-          <p class="home-cta-lead">انشر وظيفة remote، تصفّح مئات التقنيين السوريين، ووظّف بعقود B2B — دفع USD وSyria-friendly.</p>
+          <p class="home-cta-lead">تصفّح مئات التقنيين السوريين، وتواصل معنا لتوظيف بعقود B2B — دفع USD وSyria-friendly.</p>
           <div class="home-cta-actions">
-            <button class="home-cta-btn home-cta-btn--primary" type="button" onclick="goTo('{{ route('post-job') }}')">
-              <span>أضف وظيفة</span>
+            <button class="home-cta-btn home-cta-btn--primary" type="button" onclick="goTo('{{ route('contact') }}')">
+              <span>تواصل معنا</span>
               <span aria-hidden="true">←</span>
             </button>
             <button class="home-cta-btn home-cta-btn--ghost" type="button" onclick="goTo('{{ route('talents.index') }}')">
