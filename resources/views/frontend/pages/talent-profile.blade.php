@@ -12,20 +12,20 @@
 @endphp
 
 @section('content')
-<div class="tp-cover">
-  <div class="tp-cover-bg"></div>
-  <div class="tp-cover-inner">
-    <div class="breadcrumb tp-breadcrumb">
-      <span onclick="goTo('{{ route('home') }}')">الرئيسية</span>
-      <span class="sep">›</span>
-      <span onclick="goTo('{{ route('talents.index') }}')">المواهب</span>
-      <span class="sep">›</span>
-      <span>{{ $talent->name }}</span>
-    </div>
+<div class="tp-page">
+  <div class="tp-cover">
+    <div class="tp-cover-bg" aria-hidden="true"></div>
   </div>
-</div>
 
-<div class="tp-layout">
+  <nav class="tp-breadcrumb" aria-label="مسار التنقل">
+    <span onclick="goTo('{{ route('home') }}')">الرئيسية</span>
+    <span class="sep">›</span>
+    <span onclick="goTo('{{ route('talents.index') }}')">المواهب</span>
+    <span class="sep">›</span>
+    <span>{{ $talent->name }}</span>
+  </nav>
+
+  <div class="tp-layout">
   <aside class="tp-sidebar">
     <div class="tp-card">
       <div class="tp-card-top" aria-hidden="true"></div>
@@ -208,5 +208,6 @@
     </section>
     @endif
   </main>
+</div>
 </div>
 @endsection
