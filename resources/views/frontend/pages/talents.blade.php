@@ -6,62 +6,129 @@
 @php $activePage = 'talents'; @endphp
 
 @section('content')
-<div class="page-header">
-  <div class="page-header-inner">
-    <h1>⭐ دليل المواهب التقنية</h1>
-    <p>تصفّح <strong id="talents-count">{{ $talents->count() }}</strong> تقني سوري — skills، portfolios، availability</p>
-    <div class="search-bar">
-      <div class="ac-wrap">
-        <div class="search-input-wrap">
-          <span class="icon">🔍</span>
-          <input type="text" placeholder="التخصص: React، DevOps..." id="talents-search" data-ac="specialty" autocomplete="off" value="{{ $searchQuery }}">
-          <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
-        </div>
-        <div class="ac-menu" dir="rtl"></div>
+@include('frontend.partials.listing-hero-start', [
+  'eyebrow' => '⭐ مواهب تقنية · Remote-ready',
+  'title' => 'دليل <span>المواهب</span> التقنية',
+  'lead' => 'تصفّح <strong id="talents-count">' . $talents->count() . '</strong> تقني سوري — skills، portfolios، availability',
+])
+  <div class="search-bar">
+    <div class="ac-wrap">
+      <div class="search-input-wrap">
+        <span class="icon">🔍</span>
+        <input type="text" placeholder="التخصص: React، DevOps..." id="talents-search" data-ac="specialty" autocomplete="off" value="{{ $searchQuery }}">
+        <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
       </div>
-      <div class="ac-wrap ac-wrap--narrow">
-        <div class="search-input-wrap">
-          <span class="icon">📍</span>
-          <input type="text" placeholder="المدينة: دمشق، حلب..." id="talents-city" data-ac="city" autocomplete="off">
-          <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
-        </div>
-        <div class="ac-menu" dir="rtl"></div>
+      <div class="ac-menu" dir="rtl"></div>
+    </div>
+    <div class="ac-wrap ac-wrap--narrow">
+      <div class="search-input-wrap">
+        <span class="icon">📍</span>
+        <input type="text" placeholder="المدينة: دمشق، حلب..." id="talents-city" data-ac="city" autocomplete="off">
+        <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
       </div>
-      <button class="btn btn-primary" type="button" onclick="filterTalents()">بحث</button>
-      <button class="btn btn-outline" type="button" onclick="goTo('{{ route('edit-profile') }}')">+ أنشئ ملفك</button>
+      <div class="ac-menu" dir="rtl"></div>
     </div>
-    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;">
-      <div class="chip selected">الكل</div>
-      <div class="chip">Frontend</div>
-      <div class="chip">Backend</div>
-      <div class="chip">Mobile</div>
-      <div class="chip">DevOps</div>
-      <div class="chip">UI/UX</div>
-    </div>
+    <button class="btn btn-primary page-header-search-btn" type="button" onclick="filterTalents()">بحث</button>
+    <button class="btn btn-outline page-header-outline-btn" type="button" onclick="goTo('{{ route('edit-profile') }}')">+ أنشئ ملفك</button>
   </div>
-</div>
+  <div class="page-header-chips">
+    <div class="chip selected">الكل</div>
+    <div class="chip">Frontend</div>
+    <div class="chip">Backend</div>
+    <div class="chip">Mobile</div>
+    <div class="chip">DevOps</div>
+    <div class="chip">UI/UX</div>
+  </div>
+@include('frontend.partials.listing-hero-end')
 
 <div class="jobs-layout">
-  <aside class="filters-panel">
-    <div style="font-weight:800; font-size:1rem; margin-bottom:20px;">🎛️ تصفية المواهب</div>
-    <div class="filter-section">
-      <div class="filter-title">التوفر</div>
-      <label class="filter-option"><input type="checkbox" id="filter-available" onchange="filterTalents()"> متاح فوراً فقط</label>
-      <label class="filter-option"><input type="checkbox" id="filter-talent-remote" checked onchange="filterTalents()"> يعمل عن بُعد</label>
-      <label class="filter-option"><input type="checkbox" id="filter-open-to-work" onchange="filterTalents()" {{ request('open_to_work') ? 'checked' : '' }}> يبحث عن عمل فقط</label>
+  <aside class="filters-panel filters-panel--pro">
+    <div class="filters-panel-head">
+      <div class="filters-panel-head-main">
+        <span class="filters-panel-head-icon" aria-hidden="true">🎛️</span>
+        <div>
+          <h2 class="filters-panel-title">تصفية المواهب</h2>
+          <p class="filters-panel-sub">ضيّق النتائج حسب تفضيلاتك</p>
+        </div>
+      </div>
+      <button type="button" class="filter-clear-all" onclick="resetTalentFilters()">مسح الكل</button>
     </div>
-    <div class="filter-section">
-      <div class="filter-title">المدينة</div>
-      <label class="filter-option"><input type="checkbox" class="filter-talent-city-cb" data-city="عن بُعد" onchange="filterTalents()"> عن بُعد</label>
-      <label class="filter-option"><input type="checkbox" class="filter-talent-city-cb" data-city="دمشق" onchange="filterTalents()"> دمشق</label>
-      <label class="filter-option"><input type="checkbox" class="filter-talent-city-cb" data-city="حلب" onchange="filterTalents()"> حلب</label>
-      <label class="filter-option"><input type="checkbox" class="filter-talent-city-cb" data-city="اللاذقية" onchange="filterTalents()"> اللاذقية</label>
+
+    <div class="filter-block">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">⏱️</span>
+        <span class="filter-block-title">التوفر</span>
+      </div>
+      <div class="filter-check-list">
+        <label class="filter-check">
+          <input type="checkbox" id="filter-available" onchange="filterTalents()">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">متاح فوراً فقط</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" id="filter-talent-remote" checked onchange="filterTalents()">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">يعمل عن بُعد</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" id="filter-open-to-work" onchange="filterTalents()" {{ request('open_to_work') ? 'checked' : '' }}>
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">يبحث عن عمل فقط</span>
+        </label>
+      </div>
     </div>
-    <div class="filter-section">
-      <div class="filter-title">المعدل ($/ساعة)</div>
-      <input type="range" class="range-slider" min="10" max="50" value="30">
+
+    <div class="filter-block">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">📍</span>
+        <span class="filter-block-title">المدينة</span>
+      </div>
+      <div class="filter-chip-group">
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-talent-city-cb" data-city="عن بُعد" onchange="filterTalents()">
+          <span>🌐 عن بُعد</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-talent-city-cb" data-city="دمشق" onchange="filterTalents()">
+          <span>دمشق</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-talent-city-cb" data-city="حلب" onchange="filterTalents()">
+          <span>حلب</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-talent-city-cb" data-city="اللاذقية" onchange="filterTalents()">
+          <span>اللاذقية</span>
+        </label>
+      </div>
     </div>
-    <button class="btn btn-primary btn-full" type="button" onclick="filterTalents()">تطبيق</button>
+
+    <div class="filter-block filter-block--last">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">💵</span>
+        <span class="filter-block-title">المعدل ($/ساعة)</span>
+      </div>
+      <div class="filter-range-wrap">
+        <input
+          type="range"
+          id="filter-talent-rate"
+          class="range-slider range-slider--pro"
+          min="10"
+          max="50"
+          value="30"
+          oninput="document.getElementById('filter-talent-rate-val').textContent = this.value"
+        >
+        <div class="filter-range-meta">
+          <span>$10</span>
+          <span class="filter-range-value">حتى $<strong id="filter-talent-rate-val">30</strong>/ساعة</span>
+          <span>$50+</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters-panel-foot">
+      <button class="btn btn-primary btn-full filters-panel-apply" type="button" onclick="filterTalents()">تطبيق الفلاتر</button>
+    </div>
   </aside>
   <div>
     <div class="results-bar">

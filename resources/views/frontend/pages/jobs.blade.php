@@ -6,72 +6,129 @@
 @php $activePage = 'jobs'; @endphp
 
 @section('content')
-<div class="page-header">
-  <div class="page-header-inner">
-    <h1>🔍 وظائف Remote</h1>
-    <p>اكتشف <strong id="jobs-count">{{ $jobs->count() }}</strong> وظيفة عن بُعد — USD · Syria-friendly</p>
-    <div class="search-bar">
-      <div class="ac-wrap">
-        <div class="search-input-wrap">
-          <span class="icon">🔍</span>
-          <input type="text" placeholder="التخصص: React، DevOps..." id="jobs-search" data-ac="specialty" autocomplete="off" value="{{ $searchQuery }}">
-          <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
-        </div>
-        <div class="ac-menu" dir="rtl"></div>
-      </div>
-      <div class="ac-wrap ac-wrap--narrow">
-        <div class="search-input-wrap">
-          <span class="icon">📍</span>
-          <input type="text" placeholder="المدينة: دمشق، حلب..." id="jobs-city" data-ac="city" autocomplete="off">
-          <button type="button" class="ac-chevron" tabindex="-1" aria-hidden="true">▾</button>
-        </div>
-        <div class="ac-menu" dir="rtl"></div>
-      </div>
-      <button class="btn btn-primary" type="button" onclick="filterJobs()">بحث</button>
-      <select class="sort-select">
-        <option>الأحدث أولاً</option>
-        <option>الأعلى راتباً</option>
-      </select>
-    </div>
-    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;">
-      <div class="chip selected">الكل</div>
-      <div class="chip">عن بُعد 🌐</div>
-      <div class="chip">Frontend</div>
-      <div class="chip">Backend</div>
-      <div class="chip">DevOps</div>
-      <div class="chip">تصميم</div>
-    </div>
+@include('frontend.partials.listing-hero-start', [
+  'eyebrow' => '💼 فرص عن بُعد · USD · Syria-friendly',
+  'title' => 'وظائف <span>Remote</span>',
+  'lead' => 'اكتشف <strong id="jobs-count">' . $jobs->count() . '</strong> وظيفة عن بُعد — دفع بالدولار وفرص Syria-friendly',
+])
+  @include('frontend.partials.listing-hero-jobs-search', ['searchQuery' => $searchQuery])
+  <div class="page-header-chips">
+    @include('frontend.partials.listing-hero-jobs-chips')
   </div>
-</div>
+@include('frontend.partials.listing-hero-end')
 
 <div class="jobs-layout">
-  <aside class="filters-panel">
-    <div style="font-weight:800; font-size:1rem; margin-bottom:20px;">🎛️ تصفية</div>
-    <div class="filter-section">
-      <div class="filter-title">Remote</div>
-      <label class="filter-option"><input type="checkbox" id="filter-remote" onchange="filterJobs()"> عن بُعد كامل</label>
-      <label class="filter-option"><input type="checkbox" id="filter-syria" onchange="filterJobs()"> Syria-friendly 🇸🇾</label>
+  <aside class="filters-panel filters-panel--pro">
+    <div class="filters-panel-head">
+      <div class="filters-panel-head-main">
+        <span class="filters-panel-head-icon" aria-hidden="true">🎛️</span>
+        <div>
+          <h2 class="filters-panel-title">تصفية الوظائف</h2>
+          <p class="filters-panel-sub">ابحث عن الفرصة المناسبة بسرعة</p>
+        </div>
+      </div>
+      <button type="button" class="filter-clear-all" onclick="resetJobFilters()">مسح الكل</button>
     </div>
-    <div class="filter-section">
-      <div class="filter-title">الراتب (USD/شهر)</div>
-      <input type="range" class="range-slider" min="500" max="3000" value="2000">
-      <div class="range-labels"><span>$500</span><span>حتى $2000</span><span>$3000+</span></div>
+
+    <div class="filter-block">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">🌐</span>
+        <span class="filter-block-title">Remote</span>
+      </div>
+      <div class="filter-check-list">
+        <label class="filter-check">
+          <input type="checkbox" id="filter-remote" onchange="filterJobs()">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">عن بُعد كامل</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" id="filter-syria" onchange="filterJobs()">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">Syria-friendly 🇸🇾</span>
+        </label>
+      </div>
     </div>
-    <div class="filter-section">
-      <div class="filter-title">الموقع</div>
-      <label class="filter-option"><input type="checkbox" class="filter-city-cb" data-city="عن بُعد" onchange="filterJobs()"> عن بُعد</label>
-      <label class="filter-option"><input type="checkbox" class="filter-city-cb" data-city="دمشق" onchange="filterJobs()"> دمشق</label>
-      <label class="filter-option"><input type="checkbox" class="filter-city-cb" data-city="حلب" onchange="filterJobs()"> حلب</label>
-      <label class="filter-option"><input type="checkbox" class="filter-city-cb" data-city="اللاذقية" onchange="filterJobs()"> اللاذقية</label>
-      <label class="filter-option"><input type="checkbox" class="filter-city-cb" data-city="أوروبا" onchange="filterJobs()"> أوروبا</label>
+
+    <div class="filter-block">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">💵</span>
+        <span class="filter-block-title">الراتب (USD/شهر)</span>
+      </div>
+      <div class="filter-range-wrap">
+        <input
+          type="range"
+          id="filter-job-salary"
+          class="range-slider range-slider--pro"
+          min="500"
+          max="3000"
+          step="100"
+          value="2000"
+          oninput="document.getElementById('filter-job-salary-val').textContent = Number(this.value).toLocaleString('en-US')"
+        >
+        <div class="filter-range-meta">
+          <span>$500</span>
+          <span class="filter-range-value">حتى $<strong id="filter-job-salary-val">2,000</strong>/شهر</span>
+          <span>$3000+</span>
+        </div>
+      </div>
     </div>
-    <div class="filter-section">
-      <div class="filter-title">طرق الدفع</div>
-      <label class="filter-option"><input type="checkbox"> Wise</label>
-      <label class="filter-option"><input type="checkbox"> PayPal</label>
-      <label class="filter-option"><input type="checkbox"> Bank Transfer</label>
+
+    <div class="filter-block">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">📍</span>
+        <span class="filter-block-title">الموقع</span>
+      </div>
+      <div class="filter-chip-group">
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-city-cb" data-city="عن بُعد" onchange="filterJobs()">
+          <span>🌐 عن بُعد</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-city-cb" data-city="دمشق" onchange="filterJobs()">
+          <span>دمشق</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-city-cb" data-city="حلب" onchange="filterJobs()">
+          <span>حلب</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-city-cb" data-city="اللاذقية" onchange="filterJobs()">
+          <span>اللاذقية</span>
+        </label>
+        <label class="filter-chip-toggle">
+          <input type="checkbox" class="filter-city-cb" data-city="أوروبا" onchange="filterJobs()">
+          <span>أوروبا</span>
+        </label>
+      </div>
     </div>
-    <button class="btn btn-primary btn-full" type="button" onclick="filterJobs()">تطبيق الفلاتر</button>
+
+    <div class="filter-block filter-block--last">
+      <div class="filter-block-head">
+        <span class="filter-block-icon" aria-hidden="true">💳</span>
+        <span class="filter-block-title">طرق الدفع</span>
+      </div>
+      <div class="filter-check-list">
+        <label class="filter-check">
+          <input type="checkbox" name="payment_wise">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">Wise</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" name="payment_paypal">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">PayPal</span>
+        </label>
+        <label class="filter-check">
+          <input type="checkbox" name="payment_bank">
+          <span class="filter-check-mark" aria-hidden="true"></span>
+          <span class="filter-check-text">Bank Transfer</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="filters-panel-foot">
+      <button class="btn btn-primary btn-full filters-panel-apply" type="button" onclick="filterJobs()">تطبيق الفلاتر</button>
+    </div>
   </aside>
   <div>
     <div class="results-bar">

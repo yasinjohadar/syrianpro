@@ -256,53 +256,52 @@
   </div>
 </section>
 
-<!-- How it works -->
-<section class="section how-bg">
-  <div class="section-inner">
-    <div class="section-header" style="justify-content:center; text-align:center; display:block; margin-bottom:40px;">
-      <div class="section-title">كيف يعمل تك سوريا؟</div>
-      <div class="section-subtitle" style="margin-top:8px;">من الملف إلى الوظيفة — خطوات بسيطة</div>
-    </div>
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-icon">📝</div>
-        <div class="step-title">أنشئ ملفك ومعرض أعمالك</div>
-        <div class="step-desc">Skills، مشاريع، GitHub — ملف عام shareable</div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-icon">🔍</div>
-        <div class="step-title">تصفح وظائف Remote</div>
-        <div class="step-desc">فلتر حسب المهارة، USD، timezone، Syria-friendly</div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-icon">📤</div>
-        <div class="step-title">تقدّم أو تواصل</div>
-        <div class="step-desc">قدّم للوظائف — الشركات تتصفح قاعدة المواهب</div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <div class="step-icon">🎉</div>
-        <div class="step-title">اعمل عن بُعد</div>
-        <div class="step-desc">Wise، PayPal — عقود B2B مع شركات عالمية</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CTA -->
-<section style="padding: 40px 24px;">
-  <div style="max-width:1280px; margin:0 auto;">
-    <div style="background: linear-gradient(135deg, var(--accent) 0%, #FF8C5A 50%, var(--teal) 100%); border-radius: 24px; padding: 60px 40px; text-align: center; position: relative; overflow: hidden;">
-      <div style="position:relative; z-index:1; color:#fff;">
-        <div style="font-size:2.5rem; margin-bottom:12px;">🚀</div>
-        <h2 style="font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.2rem); font-weight:900; margin-bottom:12px;">شركة تبحث عن مواهب سورية؟</h2>
-        <p style="font-size:1rem; opacity:0.9; margin-bottom:28px; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.7;">انشر وظيفة remote، تصفّح 500+ تقني، ووظّف عن بُعد.</p>
-        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-          <button class="btn" style="background:#fff; color:var(--accent); padding:14px 32px; border-radius:12px; font-size:1rem; font-weight:800;" type="button" onclick="goTo('post-job.html')">أضف وظيفة</button>
-          <button class="btn" style="background:rgba(255,255,255,0.15); color:#fff; border:2px solid rgba(255,255,255,0.4); padding:14px 28px; border-radius:12px; font-size:1rem; font-weight:700;" type="button" onclick="goTo('{{ route('talents.index') }}')">تصفح المواهب</button>
+<section class="home-cta">
+  <div class="section-inner">
+    <div class="home-cta-shell">
+      <div class="home-cta-bg" aria-hidden="true">
+        <div class="home-cta-orb home-cta-orb-1"></div>
+        <div class="home-cta-orb home-cta-orb-2"></div>
+        <div class="home-cta-orb home-cta-orb-3"></div>
+        <div class="home-cta-grid-lines"></div>
+      </div>
+
+      <div class="home-cta-layout">
+        <div class="home-cta-content">
+          <span class="home-cta-eyebrow">
+            <span class="home-cta-eyebrow-dot"></span>
+            للشركات والتوظيف عن بُعد
+          </span>
+          <h2 class="home-cta-title">شركة تبحث عن<br><span>مواهب سورية؟</span></h2>
+          <p class="home-cta-lead">انشر وظيفة remote، تصفّح مئات التقنيين السوريين، ووظّف بعقود B2B — دفع USD وSyria-friendly.</p>
+          <div class="home-cta-actions">
+            <button class="home-cta-btn home-cta-btn--primary" type="button" onclick="goTo('{{ route('post-job') }}')">
+              <span>أضف وظيفة</span>
+              <span aria-hidden="true">←</span>
+            </button>
+            <button class="home-cta-btn home-cta-btn--ghost" type="button" onclick="goTo('{{ route('talents.index') }}')">
+              تصفح المواهب
+            </button>
+          </div>
+        </div>
+
+        <div class="home-cta-aside">
+          <div class="home-cta-glass-card">
+            <div class="home-cta-glass-icon">🚀</div>
+            <div class="home-cta-stat">
+              <span class="home-cta-stat-num">500<span>+</span></span>
+              <span class="home-cta-stat-label">تقني سوري</span>
+            </div>
+          </div>
+          <div class="home-cta-glass-card home-cta-glass-card--sm">
+            <span class="home-cta-chip">🌐 Remote</span>
+            <span class="home-cta-chip">💵 USD</span>
+            <span class="home-cta-chip">🇸🇾 Syria-friendly</span>
+          </div>
+          <div class="home-cta-glass-card home-cta-glass-card--quote">
+            <p>«منصة واحدة تجمع المواهب السورية مع شركات عالمية — بدون حدود.»</p>
+          </div>
         </div>
       </div>
     </div>

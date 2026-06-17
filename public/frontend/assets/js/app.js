@@ -1351,6 +1351,35 @@ function filterJobs(showEmptyToast = true) {
   if (filtered.length === 0 && showEmptyToast) showToast('لم نجد نتائج — جرّب تخصصاً أو مدينة أخرى', 'error');
 }
 
+function resetJobFilters() {
+  const remote = document.getElementById('filter-remote');
+  const syria = document.getElementById('filter-syria');
+  const salary = document.getElementById('filter-job-salary');
+  const salaryVal = document.getElementById('filter-job-salary-val');
+
+  if (remote) remote.checked = false;
+  if (syria) syria.checked = false;
+  if (salary) {
+    salary.value = '2000';
+    if (salaryVal) salaryVal.textContent = '2,000';
+  }
+
+  document.querySelectorAll('.filter-city-cb').forEach(cb => { cb.checked = false; });
+  document.querySelectorAll('.filters-panel--pro input[name^="payment_"]').forEach(cb => { cb.checked = false; });
+
+  const search = document.getElementById('jobs-search');
+  const city = document.getElementById('jobs-city');
+  if (search) search.value = '';
+  if (city) city.value = '';
+
+  document.querySelectorAll('.chip').forEach((chip, i) => {
+    chip.classList.toggle('selected', i === 0);
+  });
+
+  filterJobs(false);
+  showToast('تم مسح الفلاتر', 'success');
+}
+
 function filterTalents(showEmptyToast = true) {
   const specialty = normalizeSearch(document.getElementById('talents-search')?.value);
   const cityQuery = normalizeSearch(document.getElementById('talents-city')?.value);
@@ -1395,6 +1424,36 @@ function filterTalents(showEmptyToast = true) {
   if (countEl) countEl.textContent = filtered.length;
   if (barEl) barEl.textContent = filtered.length;
   if (filtered.length === 0 && showEmptyToast) showToast('لم نجد مواهب — جرّب تخصصاً أو مدينة أخرى', 'error');
+}
+
+function resetTalentFilters() {
+  const available = document.getElementById('filter-available');
+  const remote = document.getElementById('filter-talent-remote');
+  const openToWork = document.getElementById('filter-open-to-work');
+  const rate = document.getElementById('filter-talent-rate');
+  const rateVal = document.getElementById('filter-talent-rate-val');
+
+  if (available) available.checked = false;
+  if (remote) remote.checked = true;
+  if (openToWork) openToWork.checked = false;
+  if (rate) {
+    rate.value = '30';
+    if (rateVal) rateVal.textContent = '30';
+  }
+
+  document.querySelectorAll('.filter-talent-city-cb').forEach(cb => { cb.checked = false; });
+
+  const search = document.getElementById('talents-search');
+  const city = document.getElementById('talents-city');
+  if (search) search.value = '';
+  if (city) city.value = '';
+
+  document.querySelectorAll('.chip').forEach((chip, i) => {
+    chip.classList.toggle('selected', i === 0);
+  });
+
+  filterTalents(false);
+  showToast('تم مسح الفلاتر', 'success');
 }
 
 // ========================
