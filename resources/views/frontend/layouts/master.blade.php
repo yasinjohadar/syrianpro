@@ -6,11 +6,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @php
         $fa = asset('frontend/assets');
+        $feCssPath = public_path('frontend/assets/css/styles.css');
+        $feJsPath = public_path('frontend/assets/js/app.js');
+        $feAssetVer = max(
+            file_exists($feCssPath) ? filemtime($feCssPath) : 1,
+            file_exists($feJsPath) ? filemtime($feJsPath) : 1
+        );
     @endphp
     <title>@yield('title', 'تك سوريا — منصة المواهب التقنية السورية')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ $fa }}/css/styles.css">
+    <link rel="stylesheet" href="{{ $fa }}/css/styles.css?v={{ $feAssetVer }}">
     @yield('styles')
 </head>
 <body data-page="@yield('page')" @isset($resourceId) data-resource-id="{{ $resourceId }}" @endisset @hasSection('bodyClass') class="@yield('bodyClass')" @endif>
@@ -45,7 +51,7 @@
             dashboardUrl: @json(auth()->check() ? route(auth()->user()->dashboardRouteName()) : null),
         };
     </script>
-    <script src="{{ $fa }}/js/app.js"></script>
+    <script src="{{ $fa }}/js/app.js?v={{ $feAssetVer }}"></script>
     @yield('scripts')
 </body>
 </html>

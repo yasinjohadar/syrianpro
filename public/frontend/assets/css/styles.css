@@ -2223,9 +2223,6 @@ body[data-page="home"] .hero-inner {
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
 }
 
-  outline: none;
-  cursor: pointer;
-}
 .results-bar {
   display: flex;
   align-items: center;
