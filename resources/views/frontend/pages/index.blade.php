@@ -88,28 +88,68 @@
 </section>
 
 <!-- Categories -->
-<section class="section">
+<section class="section section-specialties">
+  <div class="section-specialties-bg" aria-hidden="true">
+    <div class="section-specialties-orb section-specialties-orb-1"></div>
+    <div class="section-specialties-orb section-specialties-orb-2"></div>
+  </div>
   <div class="section-inner">
     <div class="section-header">
       <div>
+        <div class="section-eyebrow">اكتشف مجالك</div>
         <div class="section-title">تخصصات تقنية</div>
         <div class="section-subtitle">{{ $specialties->pluck('name')->join(' · ') }}</div>
       </div>
-      <div class="see-all" onclick="goTo('jobs.html')">كل التخصصات ←</div>
+      <div class="see-all see-all--pill" onclick="goTo('{{ route('jobs.index') }}')">
+        <span>كل التخصصات</span>
+        <span class="see-all-icon">←</span>
+      </div>
     </div>
     <div class="categories-grid">
       @forelse($specialties as $specialty)
-        <div class="cat-card" onclick="goTo('jobs.html?q={{ urlencode($specialty->name) }}')">
-          <span class="cat-icon">
-            @if($specialty->image)
-              <img src="{{ $specialty->iconUrl() }}" alt="{{ $specialty->name }}" class="cat-icon-img">
-            @else
-              {{ $specialty->icon }}
-            @endif
-          </span>
-          <div class="cat-name">{{ $specialty->name }}</div>
-          <div class="cat-count">{{ $specialty->jobs_count_label }}</div>
-        </div>
+        @php
+          $catHues = [
+            'Frontend' => 18, 'Backend' => 218, 'Mobile' => 192, 'DevOps' => 165,
+            'UI/UX' => 328, 'Data' => 248, 'QA' => 42, 'Product' => 278,
+          ];
+          $catHue = $catHues[$specialty->name] ?? (($loop->index * 47) % 360);
+        @endphp
+        <article
+          class="cat-card"
+          style="--cat-delay: {{ $loop->index * 0.07 }}s; --cat-hue: {{ $catHue }}"
+          role="link"
+          tabindex="0"
+          onclick="goTo('{{ route('jobs.index') }}?q={{ urlencode($specialty->name) }}')"
+          onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); goTo('{{ route('jobs.index') }}?q={{ urlencode($specialty->name) }}'); }"
+        >
+          <span class="cat-card-border" aria-hidden="true"></span>
+          <span class="cat-card-mesh" aria-hidden="true"></span>
+          <span class="cat-card-dots" aria-hidden="true"></span>
+          <span class="cat-card-no">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+          <div class="cat-card-body">
+            <span class="cat-icon-ring" aria-hidden="true"></span>
+            <span class="cat-icon-wrap">
+              <span class="cat-icon">
+                @if($specialty->image)
+                  <img src="{{ $specialty->iconUrl() }}" alt="" class="cat-icon-img">
+                @else
+                  {{ $specialty->icon }}
+                @endif
+              </span>
+            </span>
+            <div class="cat-name">{{ $specialty->name }}</div>
+            <div class="cat-count">
+              <span class="cat-count-badge">
+                <span class="cat-count-dot"></span>
+                {{ $specialty->jobs_count_label }}
+              </span>
+            </div>
+          </div>
+          <div class="cat-card-footer">
+            <span>استكشف الوظائف</span>
+            <span class="cat-card-arrow">←</span>
+          </div>
+        </article>
       @empty
         <div class="cat-card" style="grid-column: 1 / -1; cursor: default;">
           <div class="cat-name">لا توجد تخصصات معروضة حالياً</div>
@@ -127,19 +167,46 @@
         <div class="section-title">وظائف Remote مميزة 🔥</div>
         <div class="section-subtitle">فرص عن بُعد — دفع USD — Syria-friendly</div>
       </div>
-      <div class="see-all" onclick="goTo('jobs.html')">مشاهدة الكل ←</div>
+      <div class="see-all" onclick="goTo('{{ route('jobs.index') }}')">مشاهدة الكل ←</div>
     </div>
     <div class="jobs-grid" id="home-jobs-grid">
       @forelse($featuredJobs as $job)
-        @include('frontend.partials.job-card', ['job' => $job])
+        @include('frontend.partials.featured-job-card', ['job' => $job])
       @empty
-        <div class="job-card" style="grid-column: 1 / -1; cursor: default;">
-          <div class="job-company">لا توجد وظائف مميزة حالياً</div>
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="emoji">🔥</div>
+          <h3>لا توجد وظائف مميزة حالياً</h3>
+          <p>تصفح جميع الفرص المتاحة عن بُعد.</p>
         </div>
       @endforelse
     </div>
   </div>
 </section>
+
+<!-- Recommended by Admin -->
+@if(isset($recommendedTalents) && $recommendedTalents->isNotEmpty())
+<section class="section" style="background: var(--surface); padding: 64px 24px;">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <div class="section-title">موصى به من تك سوريا</div>
+        <div class="section-subtitle">اختيار تحريري من فريق المنصة</div>
+      </div>
+      <div class="see-all" onclick="goTo('{{ route('talents.index') }}')">كل المواهب ←</div>
+    </div>
+    <div class="talents-grid">
+      @foreach($recommendedTalents as $rec)
+        @if($rec->talent)
+          @include('frontend.partials.talent-card', [
+            'talent' => $rec->talent,
+            'recommendationReason' => $rec->reason,
+          ])
+        @endif
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
 
 <!-- Featured Talents -->
 <section class="section">
@@ -149,14 +216,16 @@
         <div class="section-title">مواهب مميزة ⭐</div>
         <div class="section-subtitle">تقنيون سوريون — portfolios و skills</div>
       </div>
-      <div class="see-all" onclick="goTo('talents.html')">كل المواهب ←</div>
+      <div class="see-all" onclick="goTo('{{ route('talents.index') }}')">كل المواهب ←</div>
     </div>
-    <div class="talents-grid jobs-grid" id="home-talents-grid">
+    <div class="talents-grid" id="home-talents-grid">
       @forelse($featuredTalents as $talent)
         @include('frontend.partials.talent-card', ['talent' => $talent])
       @empty
-        <div class="job-card" style="grid-column: 1 / -1; cursor: default;">
-          <div class="job-company">لا توجد مواهب مميزة حالياً</div>
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="emoji">⭐</div>
+          <h3>لا توجد مواهب مميزة حالياً</h3>
+          <p>تصفح دليل المواهب لاكتشاف التقنيين السوريين.</p>
         </div>
       @endforelse
     </div>
@@ -171,14 +240,16 @@
         <div class="section-title">شركات Remote-friendly 🏢</div>
         <div class="section-subtitle">محلية ودولية تستقطب المواهب السورية</div>
       </div>
-      <div class="see-all" onclick="goTo('companies.html')">كل الشركات ←</div>
+      <div class="see-all" onclick="goTo('{{ route('companies.index') }}')">كل الشركات ←</div>
     </div>
     <div class="jobs-grid" id="home-companies-grid">
       @forelse($featuredCompanies as $company)
-        @include('frontend.partials.company-card', ['company' => $company])
+        @include('frontend.partials.featured-company-card', ['company' => $company])
       @empty
-        <div class="job-card" style="grid-column: 1 / -1; cursor: default;">
-          <div class="job-company">لا توجد شركات معروضة حالياً</div>
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <div class="emoji">🏢</div>
+          <h3>لا توجد شركات معروضة حالياً</h3>
+          <p>تصفح دليل الشركات التي تستقطب المواهب السورية.</p>
         </div>
       @endforelse
     </div>
@@ -231,7 +302,7 @@
         <p style="font-size:1rem; opacity:0.9; margin-bottom:28px; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.7;">انشر وظيفة remote، تصفّح 500+ تقني، ووظّف عن بُعد.</p>
         <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
           <button class="btn" style="background:#fff; color:var(--accent); padding:14px 32px; border-radius:12px; font-size:1rem; font-weight:800;" type="button" onclick="goTo('post-job.html')">أضف وظيفة</button>
-          <button class="btn" style="background:rgba(255,255,255,0.15); color:#fff; border:2px solid rgba(255,255,255,0.4); padding:14px 28px; border-radius:12px; font-size:1rem; font-weight:700;" type="button" onclick="goTo('talents.html')">تصفح المواهب</button>
+          <button class="btn" style="background:rgba(255,255,255,0.15); color:#fff; border:2px solid rgba(255,255,255,0.4); padding:14px 28px; border-radius:12px; font-size:1rem; font-weight:700;" type="button" onclick="goTo('{{ route('talents.index') }}')">تصفح المواهب</button>
         </div>
       </div>
     </div>

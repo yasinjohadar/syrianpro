@@ -48,6 +48,7 @@
       <div class="filter-title">التوفر</div>
       <label class="filter-option"><input type="checkbox" id="filter-available" onchange="filterTalents()"> متاح فوراً فقط</label>
       <label class="filter-option"><input type="checkbox" id="filter-talent-remote" checked onchange="filterTalents()"> يعمل عن بُعد</label>
+      <label class="filter-option"><input type="checkbox" id="filter-open-to-work" onchange="filterTalents()" {{ request('open_to_work') ? 'checked' : '' }}> يبحث عن عمل فقط</label>
     </div>
     <div class="filter-section">
       <div class="filter-title">المدينة</div>

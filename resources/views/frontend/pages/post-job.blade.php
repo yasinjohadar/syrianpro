@@ -99,7 +99,7 @@
     <div class="form-actions">
       <button class="btn btn-primary btn-lg" type="button" onclick="showToast('🎉 تم نشر الوظيفة بنجاح!', 'success')">🚀 نشر الوظيفة</button>
       <button class="btn btn-outline btn-lg" type="button" onclick="showToast('💾 تم حفظ المسودة', 'success')">💾 مسودة</button>
-      <button class="btn btn-outline btn-lg" type="button" onclick="goTo('dashboard-company.html')">لوحة الشركة</button>
+      <button class="btn btn-outline btn-lg" type="button" onclick="window.location.href='{{ route('company.dashboard') }}'">لوحة الشركة</button>
     </div>
   </div>
 </div>

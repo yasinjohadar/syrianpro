@@ -61,7 +61,7 @@
       <div class="form-actions">
         <button type="submit" class="btn btn-primary btn-lg">💾 حفظ الملف</button>
         <button type="button" class="btn btn-outline btn-lg" onclick="goTo('talent-profile.html?id=99')">معاينة الملف</button>
-        <button type="button" class="btn btn-outline btn-lg" onclick="goTo('dashboard-seeker.html')">لوحتي</button>
+        <button type="button" class="btn btn-outline btn-lg" onclick="window.location.href='{{ route('talent.dashboard') }}'">لوحتي</button>
       </div>
     </form>
   </div>

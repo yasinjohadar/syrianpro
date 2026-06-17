@@ -10,7 +10,7 @@ class TalentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Talent::query()->active()->ordered();
+        $query = Talent::query()->active()->ordered()->with(['activePublicHiringRequest', 'techSpecialty']);
 
         if ($request->filled('q')) {
             $search = $request->input('q');
@@ -20,6 +20,10 @@ class TalentController extends Controller
                     ->orWhere('city', 'like', "%{$search}%")
                     ->orWhereJsonContains('skills', $search);
             });
+        }
+
+        if ($request->boolean('open_to_work')) {
+            $query->where('is_open_to_work', true);
         }
 
         $talents = $query->get();
@@ -36,6 +40,8 @@ class TalentController extends Controller
     public function show(Talent $talent)
     {
         abort_unless($talent->is_active, 404);
+
+        $talent->load(['activePublicHiringRequest', 'techSpecialty']);
 
         return view('frontend.pages.talent-profile', [
             'activePage' => 'talents',

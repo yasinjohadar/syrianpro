@@ -5,6 +5,13 @@
     </div>
 @endif
 
+@if (session('warning'))
+    <div class="alert alert-warning alert-dismissible fade show border-0 shadow-sm" role="alert">
+        <i class="ri-alert-line me-2"></i>{!! session('warning') !!}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 @if (session('error'))
     <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
         <i class="ri-error-warning-line me-2"></i>{!! session('error') !!}

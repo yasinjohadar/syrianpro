@@ -19,14 +19,11 @@ class DatabaseSeeder extends Seeder
             JobSeeder::class,
             TalentSeeder::class,
             CompanySeeder::class,
+            DemoUserSeeder::class,
+            TalentHiringRequestSeeder::class,
             BlogCategorySeeder::class,
             BlogTagSeeder::class,
             BlogPostSeeder::class,
-        ]);
-
-        User::factory()->create([
-            'name' => 'user',
-            'email' => 'user@example.com',
         ]);
     }
 }

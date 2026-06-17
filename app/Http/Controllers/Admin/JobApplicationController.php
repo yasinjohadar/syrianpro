@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\JobApplication;
+use App\Notifications\JobApplicationStatusChangedNotification;
+use App\Services\HireRecordService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class JobApplicationController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        private HireRecordService $hireRecordService
+    ) {
         $this->middleware('auth');
         $this->middleware('permission:job-application-list')->only('index');
         $this->middleware('permission:job-application-show')->only('show');
@@ -79,7 +82,16 @@ class JobApplicationController extends Controller
             'admin_notes' => ['nullable', 'string', 'max:5000'],
         ]);
 
+        $previousStatus = $jobApplication->status;
         $jobApplication->update($validated);
+
+        if ($previousStatus !== $jobApplication->status && $jobApplication->user) {
+            $jobApplication->user->notify(new JobApplicationStatusChangedNotification($jobApplication->fresh(['job'])));
+        }
+
+        if ($jobApplication->status === JobApplication::STATUS_ACCEPTED) {
+            $this->hireRecordService->recordFromApplication($jobApplication->fresh(['user.talent', 'job']));
+        }
 
         return redirect()
             ->route('admin.job-applications.show', $jobApplication)

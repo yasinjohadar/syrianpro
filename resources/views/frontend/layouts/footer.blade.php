@@ -40,7 +40,7 @@
                     <li><a href="{{ route('jobs.index') }}"><span>وظائف عن بُعد</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('talents.index') }}"><span>دليل المواهب</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('edit-profile') }}"><span>إنشاء ملف</span><span class="footer-link-arrow">←</span></a></li>
-                    <li><a href="{{ route('dashboard.seeker') }}"><span>لوحة التحكم</span><span class="footer-link-arrow">←</span></a></li>
+                    <li><a href="{{ route('talent.dashboard') }}"><span>لوحة التحكم</span><span class="footer-link-arrow">←</span></a></li>
                 </ul>
             </div>
 
@@ -48,7 +48,7 @@
                 <h4><span class="footer-col-dot"></span> للشركات</h4>
                 <ul>
                     <li><a href="{{ route('post-job') }}"><span>أضف وظيفة</span><span class="footer-link-arrow">←</span></a></li>
-                    <li><a href="{{ route('dashboard.company') }}"><span>لوحة الشركة</span><span class="footer-link-arrow">←</span></a></li>
+                    <li><a href="{{ route('company.dashboard') }}"><span>لوحة الشركة</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('talents.index') }}"><span>قاعدة المواهب</span><span class="footer-link-arrow">←</span></a></li>
                     <li><a href="{{ route('companies.index') }}"><span>الشركات</span><span class="footer-link-arrow">←</span></a></li>
                 </ul>

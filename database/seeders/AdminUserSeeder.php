@@ -45,5 +45,8 @@ class AdminUserSeeder extends Seeder
         ];
 
         $userRole->syncPermissions($userPermissions);
+
+        Role::firstOrCreate(['name' => 'company']);
+        Role::firstOrCreate(['name' => 'talent']);
     }
 }

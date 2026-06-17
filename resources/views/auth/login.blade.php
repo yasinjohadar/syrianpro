@@ -71,6 +71,30 @@
                 </div>
             @endif
         </form>
+
+        @if (!empty($demoAccounts))
+            <div class="auth-demo-login">
+                <div class="auth-demo-divider">
+                    <span>دخول سريع للتجربة</span>
+                </div>
+                <p class="auth-demo-note">للتطوير المحلي فقط — بيانات من الـ seed</p>
+                <div class="auth-demo-grid">
+                    @foreach ($demoAccounts as $key => $account)
+                        <form method="POST" action="{{ route('login.demo', $key) }}">
+                            @csrf
+                            <button type="submit" class="auth-demo-btn auth-demo-btn--{{ $key }}">
+                                <span class="auth-demo-btn-label">{{ $account['label'] }}</span>
+                                <span class="auth-demo-btn-desc">{{ $account['description'] ?? $account['email'] }}</span>
+                            </button>
+                        </form>
+                    @endforeach
+                </div>
+                <p class="auth-demo-hint">
+                    كلمة المرور الافتراضية: <code>{{ $demoPassword }}</code>
+                    · المستخدم العام: <code>password</code>
+                </p>
+            </div>
+        @endif
     </div>
 </section>
 @endsection

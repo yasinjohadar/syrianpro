@@ -68,4 +68,36 @@ class User extends Authenticatable
     {
         return $this->hasMany(JobApplication::class);
     }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class);
+    }
+
+    public function talent()
+    {
+        return $this->hasOne(Talent::class);
+    }
+
+    public function hiringRequests()
+    {
+        return $this->hasMany(TalentHiringRequest::class);
+    }
+
+    public function dashboardRouteName(): string
+    {
+        if ($this->hasRole('admin')) {
+            return 'admin.dashboard';
+        }
+
+        if ($this->hasRole('company')) {
+            return 'company.dashboard';
+        }
+
+        if ($this->hasRole('talent')) {
+            return 'talent.dashboard';
+        }
+
+        return 'talent.dashboard';
+    }
 }

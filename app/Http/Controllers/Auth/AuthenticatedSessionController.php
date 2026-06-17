@@ -20,7 +20,10 @@ class AuthenticatedSessionController extends Controller
             session(['url.intended' => $request->input('redirect')]);
         }
 
-        return view('auth.login');
+        return view('auth.login', [
+            'demoAccounts' => config('demo-accounts.enabled') ? config('demo-accounts.accounts') : [],
+            'demoPassword' => config('demo-accounts.password'),
+        ]);
     }
 
     /**
@@ -44,7 +47,46 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        return redirect()->intended(route(auth()->user()->dashboardRouteName(), absolute: false));
+    }
+
+    /**
+     * One-click demo login for local development.
+     */
+    public function quickLogin(string $account): RedirectResponse
+    {
+        if (! config('demo-accounts.enabled')) {
+            abort(404);
+        }
+
+        $accounts = config('demo-accounts.accounts', []);
+
+        if (! isset($accounts[$account])) {
+            abort(404);
+        }
+
+        $demo = $accounts[$account];
+        $password = $demo['password'] ?? config('demo-accounts.password');
+
+        if (! Auth::attempt(['email' => $demo['email'], 'password' => $password], true)) {
+            return back()->withErrors([
+                'email' => 'حساب التجربة غير متوفر. شغّل: php artisan db:seed --class=DemoUserSeeder',
+            ]);
+        }
+
+        $user = Auth::user();
+
+        if (! $user->is_active) {
+            Auth::logout();
+
+            return back()->withErrors([
+                'email' => 'تم إلغاء تفعيل حسابك. يرجى التواصل مع الإدارة.',
+            ]);
+        }
+
+        request()->session()->regenerate();
+
+        return redirect()->intended(route($user->dashboardRouteName(), absolute: false));
     }
 
     /**

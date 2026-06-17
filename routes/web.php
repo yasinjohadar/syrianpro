@@ -26,7 +26,13 @@ Route::get('/serve/blog-image/{filename}', function (string $filename) {
 // الصفحة الرئيسية
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::redirect('/dashboard', '/admin')->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    if (! auth()->check()) {
+        return redirect()->route('login');
+    }
+
+    return redirect()->route(auth()->user()->dashboardRouteName());
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'check.user.active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,6 +42,8 @@ Route::middleware(['auth', 'check.user.active'])->group(function () {
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
+require __DIR__.'/company.php';
+require __DIR__.'/talent.php';
 require __DIR__.'/frontend.php';
 
 // اختبار السيرفر — الإصدارات، قاعدة البيانات، ENV، الفرونتند (استخدم ?key=قيمة SERVER_TEST_KEY من .env)

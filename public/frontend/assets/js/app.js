@@ -905,8 +905,18 @@ function navigate(pageId) {
 // ========================
 // RENDER JOBS
 // ========================
+function jobShowUrl(job) {
+  const base = (window.FRONTEND_ROUTES && window.FRONTEND_ROUTES.jobs) || '/jobs';
+  return `${base.replace(/\/$/, '')}/${job.slug || job.id}`;
+}
+
+function companyShowUrl(company) {
+  const base = (window.FRONTEND_ROUTES && window.FRONTEND_ROUTES.companies) || '/companies';
+  return `${base.replace(/\/$/, '')}/${company.slug || company.id}`;
+}
+
 function createJobCard(job, onclick) {
-  const click = onclick || `goTo('job-detail.html?id=${job.id}')`;
+  const click = onclick || `goTo('${jobShowUrl(job)}')`;
   const tagHTML = job.tagLabels.map(t => `<span class="tag tag-${t.c}">${t.t}</span>`).join('');
   const saved = isJobSaved(job.id);
   return `
@@ -941,7 +951,7 @@ function createCompanyCard(company) {
     company.verified ? '<span class="tag tag-gold">موثّق ✓</span>' : '',
   ].join('');
   return `
-    <div class="job-card" onclick="goTo('company-profile.html?id=${company.id}')">
+    <div class="job-card" onclick="goTo('${companyShowUrl(company)}')">
       <div class="job-card-top">
         <div class="company-logo">${company.logo}</div>
         <div style="flex:1; margin: 0 12px;">
@@ -968,28 +978,75 @@ function renderCompanies(containerId, companies, count) {
 // ========================
 // RENDER TALENTS
 // ========================
+function talentShowUrl(talent) {
+  const base = (window.FRONTEND_ROUTES && window.FRONTEND_ROUTES.talents) || '/talents';
+  return `${base.replace(/\/$/, '')}/${talent.slug || talent.id}`;
+}
+
 function createTalentCard(talent) {
-  const skillsHTML = talent.skills.slice(0, 4).map(s => `<span class="tag tag-gray">${s}</span>`).join('');
-  const tagHTML = [
-    talent.remote ? '<span class="tag tag-teal">عن بُعد 🌐</span>' : '',
-    `<span class="tag tag-blue">📍 ${talent.city}</span>`,
-    talent.verified ? '<span class="tag tag-gold">موثّق ✓</span>' : '',
-  ].join('');
+  const allSkills = talent.skills || [];
+  const skills = allSkills.slice(0, 3);
+  const extraSkills = Math.max(0, allSkills.length - skills.length);
+  const skillsHTML = skills.map(s => `<span class="talent-card__skill">${s}</span>`).join('')
+    + (extraSkills ? `<span class="talent-card__skill talent-card__skill--more">+${extraSkills}</span>` : '');
+
+  const chips = [
+    talent.city ? `<span class="talent-card__chip">${talent.city}</span>` : '',
+    talent.remote ? `<span class="talent-card__chip talent-card__chip--teal">عن بُعد</span>` : '',
+    (talent.openToWork || talent.hiringHeadline) ? `<span class="talent-card__chip talent-card__chip--green">يبحث عن عمل</span>` : '',
+    talent.verified ? `<span class="talent-card__chip talent-card__chip--gold">موثّق</span>` : '',
+  ].filter(Boolean).join('');
+
+  const avatarInner = talent.avatarImage
+    ? `<img src="${talent.avatarImage}" alt="${talent.name}" class="talent-card__avatar-img">`
+    : talent.avatar;
+
+  let rateHTML = '<span class="talent-card__rate-na">—</span>';
+  if (talent.rateMin && talent.rateMax) {
+    const fmt = n => Number(n).toLocaleString('en-US');
+    rateHTML = `<span dir="ltr" class="tp-ltr-val">$${fmt(talent.rateMin)} – $${fmt(talent.rateMax)}</span><span class="tp-rate-unit">/ساعة</span>`;
+  } else if (talent.rateUSD) {
+    rateHTML = formatRateDisplay(talent.rateUSD);
+  }
+
+  const hiringHTML = talent.hiringHeadline
+    ? `<p class="talent-card__hiring">يبحث عن: ${talent.hiringHeadline.length > 48 ? `${talent.hiringHeadline.slice(0, 48)}…` : talent.hiringHeadline}</p>`
+    : '';
+
+  const specialtyHTML = talent.specialtyName
+    ? `<p class="talent-card__specialty">${talent.specialtyName}</p>`
+    : '';
+
+  const recommendHTML = talent.recommendationReason
+    ? `<div class="talent-card__recommend">${talent.recommendationReason}</div>`
+    : '';
+
   return `
-    <div class="job-card" onclick="goTo('talent-profile.html?id=${talent.id}')">
-      <div class="job-card-top">
-        <div class="company-logo">${talent.avatar}</div>
-        <div style="flex:1; margin: 0 12px;">
-          <div class="job-title">${talent.name}</div>
-          <div class="job-company">${talent.title}</div>
-        </div>
+<a href="${talentShowUrl(talent)}" class="talent-card">
+  ${recommendHTML}
+  <div class="talent-card__header">
+    <div class="talent-card__avatar-wrap">
+      <div class="talent-card__avatar-ring"></div>
+      <div class="talent-card__avatar">${avatarInner}</div>
+    </div>
+    <div class="talent-card__identity">
+      <div class="talent-card__name-row">
+        <h3 class="talent-card__name">${talent.name}</h3>
+        ${talent.featured ? '<span class="talent-card__featured">مميز</span>' : ''}
       </div>
-      <div class="job-tags">${tagHTML}${skillsHTML}</div>
-      <div class="job-meta">
-        <div class="job-salary">${formatRateDisplay(talent.rateUSD)}</div>
-        <div class="job-date">${talent.availability}</div>
-      </div>
-    </div>`;
+      <p class="talent-card__title">${talent.title || ''}</p>
+      ${specialtyHTML}
+    </div>
+  </div>
+  <div class="talent-card__badges">${chips}</div>
+  ${skills.length ? `<div class="talent-card__skills">${skillsHTML}</div>` : ''}
+  ${hiringHTML}
+  <div class="talent-card__footer">
+    <div class="talent-card__rate">${rateHTML}</div>
+    ${talent.availability ? `<div class="talent-card__availability">${talent.availability}</div>` : ''}
+  </div>
+  <span class="talent-card__cta">عرض الملف ←</span>
+</a>`;
 }
 
 function renderTalents(containerId, talents, count) {
@@ -1299,6 +1356,7 @@ function filterTalents(showEmptyToast = true) {
   const cityQuery = normalizeSearch(document.getElementById('talents-city')?.value);
   const remoteOnly = document.getElementById('filter-talent-remote')?.checked;
   const availableOnly = document.getElementById('filter-available')?.checked;
+  const openToWorkOnly = document.getElementById('filter-open-to-work')?.checked;
   const sidebarCities = getSelectedFilterCities('.filter-talent-city-cb');
 
   let filtered = getTalentsData().filter(t => {
@@ -1309,6 +1367,7 @@ function filterTalents(showEmptyToast = true) {
     if (cityQuery && !matchesCity(t.city, cityQuery)) return false;
     if (sidebarCities.length && !sidebarCities.some(c => matchesCity(t.city, c))) return false;
     if (remoteOnly && !t.remote) return false;
+    if (openToWorkOnly && !t.openToWork) return false;
     if (availableOnly && t.availability.includes('مشغولة')) return false;
     return true;
   });

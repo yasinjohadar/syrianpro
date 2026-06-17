@@ -32,7 +32,7 @@ class JobApplication extends Model
             self::STATUS_REVIEWING => 'قيد الدراسة',
             self::STATUS_SHORTLISTED => 'قائمة مختصرة',
             self::STATUS_REJECTED => 'مرفوض',
-            self::STATUS_ACCEPTED => 'مقبول',
+            self::STATUS_ACCEPTED => 'تم القبول / التوظيف',
         ];
     }
 

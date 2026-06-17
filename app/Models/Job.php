@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\ResolvesSlugOrIdRouteBinding;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,7 @@ use Illuminate\Support\Str;
 
 class Job extends Model
 {
+    use ResolvesSlugOrIdRouteBinding;
     use SoftDeletes;
 
     protected $table = 'job_listings';
@@ -19,6 +21,7 @@ class Job extends Model
     protected $fillable = [
         'title',
         'slug',
+        'company_id',
         'company_name',
         'logo',
         'logo_image',
@@ -87,6 +90,16 @@ class Job extends Model
         }
 
         return $slug ?: Str::random(8);
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function techSpecialty(): BelongsTo
@@ -189,6 +202,7 @@ class Job extends Model
     {
         return [
             'id' => $this->id,
+            'slug' => $this->slug,
             'title' => $this->title,
             'company' => $this->company_name,
             'logo' => $this->logo ?? '💼',

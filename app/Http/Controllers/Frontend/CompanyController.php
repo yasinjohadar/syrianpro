@@ -41,9 +41,8 @@ class CompanyController extends Controller
     {
         abort_unless($company->is_active, 404);
 
-        $companyJobs = Job::query()
+        $companyJobs = $company->jobs()
             ->active()
-            ->where('company_name', $company->name)
             ->ordered()
             ->limit(4)
             ->get();

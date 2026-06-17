@@ -35,14 +35,14 @@
             companies: @json(route('companies.index')),
             postJob: @json(route('post-job')),
             editProfile: @json(route('edit-profile')),
-            dashboardSeeker: @json(route('dashboard.seeker')),
-            dashboardCompany: @json(route('dashboard.company')),
-            profile: @json(route('dashboard.seeker')),
+            dashboardSeeker: @json(route('talent.dashboard')),
+            dashboardCompany: @json(route('company.dashboard')),
+            profile: @json(route('talent.profile.edit')),
             login: @json(route('login')),
         };
         window.FRONTEND_AUTH = {
             loggedIn: @json(auth()->check()),
-            dashboardUrl: @json(auth()->check() ? route('admin.dashboard') : null),
+            dashboardUrl: @json(auth()->check() ? route(auth()->user()->dashboardRouteName()) : null),
         };
     </script>
     <script src="{{ $fa }}/js/app.js"></script>

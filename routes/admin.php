@@ -72,6 +72,10 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
     Route::patch('job-applications/{jobApplication}/status', [JobApplicationController::class, 'updateStatus'])->name('job-applications.update-status');
     Route::delete('job-applications/{jobApplication}', [JobApplicationController::class, 'destroy'])->name('job-applications.destroy');
 
+    Route::get('hires', [\App\Http\Controllers\Admin\HireController::class, 'index'])->name('hires.index');
+
+    Route::resource('talent-recommendations', \App\Http\Controllers\Admin\TalentRecommendationController::class)->only(['index', 'create', 'store', 'destroy']);
+
     // المواهب
     Route::resource('talents', TalentController::class);
     Route::post('talents/{talent}/toggle-active', [TalentController::class, 'toggleActive'])

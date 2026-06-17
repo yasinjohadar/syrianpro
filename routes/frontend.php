@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\Frontend\CompanyController;
-use App\Http\Controllers\Frontend\DashboardSeekerController;
 use App\Http\Controllers\Frontend\JobApplicationController;
 use App\Http\Controllers\Frontend\JobController;
 use App\Http\Controllers\Frontend\TalentController;
@@ -86,8 +85,10 @@ Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
 
 Route::middleware(['auth', 'check.user.active'])->group(function () {
     Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
-    Route::get('/dashboard/seeker', [DashboardSeekerController::class, 'index'])->name('dashboard.seeker');
 });
+
+Route::redirect('/dashboard/seeker', '/talent')->middleware(['auth', 'check.user.active'])->name('dashboard.seeker');
+Route::redirect('/dashboard/company', '/company')->middleware(['auth', 'check.user.active'])->name('dashboard.company');
 
 Route::get('/talents', [TalentController::class, 'index'])->name('talents.index');
 Route::get('/talents/{talent}', [TalentController::class, 'show'])->name('talents.show');
@@ -95,7 +96,11 @@ Route::get('/talents/{talent}', [TalentController::class, 'show'])->name('talent
 Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
 Route::get('/companies/{company}', [CompanyController::class, 'show'])->name('companies.show');
 
-Route::get('/post-job', fn () => view('frontend.pages.post-job', ['activePage' => 'post-job']))->name('post-job');
-Route::get('/edit-profile', fn () => view('frontend.pages.edit-profile', ['activePage' => 'edit-profile']))->name('edit-profile');
+Route::get('/post-job', function () {
+    if (auth()->check() && auth()->user()->hasRole('company')) {
+        return redirect()->route('company.jobs.create');
+    }
 
-Route::get('/dashboard/company', fn () => view('frontend.pages.dashboard-company', ['activePage' => 'dashboard-company']))->name('dashboard.company');
+    return view('frontend.pages.post-job', ['activePage' => 'post-job']);
+})->name('post-job');
+Route::get('/edit-profile', fn () => view('frontend.pages.edit-profile', ['activePage' => 'edit-profile']))->name('edit-profile');

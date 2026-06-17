@@ -14,6 +14,19 @@ class CompanySeeder extends Seeder
                 'name' => 'SyriaDev Studio', 'sector' => 'تطوير البرمجيات', 'category' => 'tech',
                 'logo' => '💻', 'jobs_count' => 8, 'rating' => 4.8, 'location' => 'دمشق',
                 'founded' => '2018', 'team_size' => '30–45', 'website' => 'syriadev.studio', 'timezone' => 'UTC+2',
+                'contact_emails' => [
+                    ['label' => 'التوظيف', 'email' => 'careers@syriadev.studio'],
+                    ['label' => 'عام', 'email' => 'hello@syriadev.studio'],
+                ],
+                'contact_websites' => [
+                    ['label' => 'الموقع الرئيسي', 'url' => 'syriadev.studio'],
+                    ['label' => 'المدونة', 'url' => 'blog.syriadev.studio'],
+                ],
+                'social_links' => [
+                    ['platform' => 'linkedin', 'url' => 'https://linkedin.com/company/syriadev'],
+                    ['platform' => 'github', 'url' => 'https://github.com/syriadev'],
+                    ['platform' => 'twitter', 'url' => 'https://x.com/syriadev'],
+                ],
                 'payment_methods' => ['Wise', 'PayPal', 'Bank Transfer'],
                 'about' => 'SyriaDev Studio ستوديو برمجي سوري يبني منتجات SaaS للسوق العربي والعالمي. نعمل بنموذج remote-first منذ التأسيس، ونجمع بين خبرة محلية عميقة وفهم احتياجات المستخدم العربي مع معايير هندسة عالمية. فرقنا موزعة بين دمشق وحلب وأوروبا، ونركز على React و Node.js ومنتجات B2B قابلة للتوسع.',
                 'mission' => 'تمكين المواهب السورية من بناء منتجات تقنية عالمية المستوى — دون الحاجة للهجرة أو التنازل عن جودة الحياة.',

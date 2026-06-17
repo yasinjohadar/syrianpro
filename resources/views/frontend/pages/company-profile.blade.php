@@ -61,9 +61,14 @@
             💼 مشاهدة الوظائف ({{ $company->jobs_count }})
           </button>
           <button class="btn btn-outline cp-btn-outline" type="button" onclick="goTo('{{ route('talents.index') }}')">👥 تصفح المواهب</button>
-          @if($company->website)
-            <a class="btn btn-outline cp-btn-outline" href="https://{{ $company->website }}" target="_blank" rel="noopener">🌐 {{ $company->website }}</a>
-          @endif
+          @foreach($company->resolvedContactWebsites() as $site)
+            @if(!empty($site['url']))
+              <a class="btn btn-outline cp-btn-outline" href="{{ $company->externalUrl($site['url']) }}" target="_blank" rel="noopener">
+                @include('partials.contact-channel-icon', ['channel' => 'website', 'variant' => 'emoji', 'wrapperClass' => 'me-1'])
+                {{ $site['label'] ?: $site['url'] }}
+              </a>
+            @endif
+          @endforeach
         </div>
       </div>
     </div>
@@ -173,6 +178,51 @@
       <div class="cp-info-row"><span class="cp-info-icon">🕐</span><div><span class="cp-info-lbl">Timezone</span><span class="cp-info-val">{{ $company->timezone ?? '—' }}</span></div></div>
       <div class="cp-info-row"><span class="cp-info-icon">💳</span><div><span class="cp-info-lbl">طرق الدفع</span><span class="cp-info-val">{{ implode(' · ', $company->payment_methods ?? []) ?: '—' }}</span></div></div>
     </div>
+
+    @php
+      $contactEmails = $company->contact_emails ?? [];
+      $contactWebsites = $company->resolvedContactWebsites();
+      $socialLinks = $company->social_links ?? [];
+      $hasContact = !empty($contactEmails) || !empty($contactWebsites) || !empty($socialLinks);
+    @endphp
+    @if($hasContact)
+    <div class="cp-side-card">
+      <h3>📬 تواصل معنا</h3>
+      @foreach($contactEmails as $email)
+        @if(!empty($email['email']))
+          <div class="cp-info-row">
+            <span class="cp-info-icon">@include('partials.contact-channel-icon', ['channel' => 'email', 'variant' => 'emoji'])</span>
+            <div>
+              <span class="cp-info-lbl">{{ $email['label'] ?: 'بريد إلكتروني' }}</span>
+              <a class="cp-info-val d-block" href="mailto:{{ $email['email'] }}">{{ $email['email'] }}</a>
+            </div>
+          </div>
+        @endif
+      @endforeach
+      @foreach($contactWebsites as $site)
+        @if(!empty($site['url']))
+          <div class="cp-info-row">
+            <span class="cp-info-icon">@include('partials.contact-channel-icon', ['channel' => 'website', 'variant' => 'emoji'])</span>
+            <div>
+              <span class="cp-info-lbl">{{ $site['label'] ?: 'موقع إلكتروني' }}</span>
+              <a class="cp-info-val d-block" href="{{ $company->externalUrl($site['url']) }}" target="_blank" rel="noopener">{{ $site['url'] }}</a>
+            </div>
+          </div>
+        @endif
+      @endforeach
+      @foreach($socialLinks as $link)
+        @if(!empty($link['url']))
+          <div class="cp-info-row">
+            <span class="cp-info-icon">@include('partials.contact-channel-icon', ['channel' => 'social', 'platform' => $link['platform'] ?? 'other', 'variant' => 'emoji'])</span>
+            <div>
+              <span class="cp-info-lbl">{{ $link['label'] ?? $company->socialPlatformLabel($link['platform'] ?? null) }}</span>
+              <a class="cp-info-val d-block" href="{{ $company->externalUrl($link['url']) }}" target="_blank" rel="noopener">{{ $link['url'] }}</a>
+            </div>
+          </div>
+        @endif
+      @endforeach
+    </div>
+    @endif
 
     @if(!empty($company->perks))
     <div class="cp-side-card cp-side-highlight">

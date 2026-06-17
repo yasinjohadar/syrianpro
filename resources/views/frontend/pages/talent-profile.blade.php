@@ -6,7 +6,9 @@
 
 @php
   $activePage = 'talents';
-  $links = $talent->links ?? [];
+  $contactEmails = $talent->resolvedContactEmails();
+  $contactWebsites = $talent->resolvedContactWebsites();
+  $socialLinks = $talent->resolvedSocialLinks();
 @endphp
 
 @section('content')
@@ -26,6 +28,7 @@
 <div class="tp-layout">
   <aside class="tp-sidebar">
     <div class="tp-card">
+      <div class="tp-card-top" aria-hidden="true"></div>
       <div class="tp-avatar-wrap">
         <div class="tp-avatar-ring"></div>
         <div class="tp-avatar">
@@ -47,7 +50,19 @@
         @if($talent->is_remote)
           <span class="remote-badge">عن بُعد</span>
         @endif
+        @if($talent->is_open_to_work)
+          <span class="remote-badge" style="background:var(--accent-bg); color:var(--accent);">يبحث عن عمل</span>
+        @endif
       </div>
+
+      @if($talent->activePublicHiringRequest)
+      <div class="tp-hiring-request" style="margin-top:16px;padding:14px;border-radius:12px;background:var(--surface2,#f8fafc);border:1px solid var(--border,#e2e8f0);">
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:6px;">يبحث عن: {{ $talent->activePublicHiringRequest->headline }}</div>
+        @if($talent->activePublicHiringRequest->cover_message)
+          <p style="font-size:0.85rem;color:var(--text3);margin:0;line-height:1.6;">{{ \Illuminate\Support\Str::limit($talent->activePublicHiringRequest->cover_message, 160) }}</p>
+        @endif
+      </div>
+      @endif
 
       <div class="tp-stats">
         <div class="tp-stat">
@@ -76,7 +91,7 @@
         <button class="btn btn-primary btn-full tp-btn-contact" type="button" onclick="contactTalent()">
           <span>📧</span> تواصل الآن
         </button>
-        <button class="btn btn-outline btn-full" type="button" onclick="goTo('{{ route('edit-profile') }}')">
+        <button class="btn btn-outline btn-full" type="button" onclick="goTo('{{ route('talent.profile.edit') }}')">
           <span>✏️</span> تعديل الملف
         </button>
       </div>
@@ -93,15 +108,30 @@
       <div class="tp-divider"></div>
 
       <div class="tp-social">
-        @if(!empty($links['github']))
-          <a class="tp-social-btn" href="{{ $links['github'] }}" target="_blank">🐙 GitHub</a>
-        @endif
-        @if(!empty($links['linkedin']))
-          <a class="tp-social-btn" href="{{ $links['linkedin'] }}" target="_blank">in LinkedIn</a>
-        @endif
-        @if(!empty($links['portfolio']))
-          <a class="tp-social-btn" href="{{ $links['portfolio'] }}" target="_blank">🌐 Portfolio</a>
-        @endif
+        @foreach($contactEmails as $email)
+          @if(!empty($email['email']))
+            <a class="tp-social-btn" href="mailto:{{ $email['email'] }}">
+              @include('partials.contact-channel-icon', ['channel' => 'email', 'variant' => 'emoji', 'wrapperClass' => 'me-1'])
+              {{ $email['label'] ?: $email['email'] }}
+            </a>
+          @endif
+        @endforeach
+        @foreach($contactWebsites as $site)
+          @if(!empty($site['url']))
+            <a class="tp-social-btn" href="{{ $talent->externalUrl($site['url']) }}" target="_blank" rel="noopener">
+              @include('partials.contact-channel-icon', ['channel' => 'website', 'variant' => 'emoji', 'wrapperClass' => 'me-1'])
+              {{ $site['label'] ?: $site['url'] }}
+            </a>
+          @endif
+        @endforeach
+        @foreach($socialLinks as $link)
+          @if(!empty($link['url']))
+            <a class="tp-social-btn" href="{{ $talent->externalUrl($link['url']) }}" target="_blank" rel="noopener">
+              @include('partials.contact-channel-icon', ['channel' => 'social', 'platform' => $link['platform'] ?? 'other', 'variant' => 'emoji', 'wrapperClass' => 'me-1'])
+              {{ $link['label'] ?? $talent->socialPlatformLabel($link['platform'] ?? null) }}
+            </a>
+          @endif
+        @endforeach
       </div>
     </div>
   </aside>
